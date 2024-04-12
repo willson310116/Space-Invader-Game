@@ -18,7 +18,8 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 
 set(SOURCE_FILE src/main.cpp
                 src/game.cpp
-                src/spaceship.cpp)
+                src/spaceship.cpp
+                src/laser.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILE})
 target_link_libraries(${PROJECT_NAME} raylib)

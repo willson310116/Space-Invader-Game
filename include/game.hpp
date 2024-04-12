@@ -13,6 +13,6 @@ public:
 
 private:
     Spaceship spaceship;
-
+    void DeleteInactiveLaser();
 };
 
