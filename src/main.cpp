@@ -1,24 +1,25 @@
 #include <raylib.h>
-#include "ball.hpp"
+#include "game.hpp"
 
 int main()
 {
-    Color darkGreen = Color{20, 160, 133, 255};
-
-    const int screenWidth = 800;
-    const int screenHeight = 600;
-
-    Ball* ball = new Ball();
-
-    InitWindow(screenWidth, screenHeight, "My first RAYLIB program!");
+    int windowWidth = 750;
+    int windowHeight = 750;
+    Color grey = {29, 29, 29, 255};
     SetTargetFPS(60);
 
-    while (!WindowShouldClose())
+    InitWindow(windowWidth, windowHeight, "C++ space invader");
+    // create instance after window initialization
+    Game game;
+    
+    while (WindowShouldClose() == false)
     {
+        game.HandleInput();
+
         BeginDrawing();
-        ClearBackground(darkGreen);
-        ball->Update();
-        ball->Draw();
+        ClearBackground(grey);
+        game.Draw();
+        
         EndDrawing();
     }
 

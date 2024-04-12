@@ -17,7 +17,8 @@ FetchContent_MakeAvailable(raylib)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
 set(SOURCE_FILE src/main.cpp
-                src/ball.cpp)
+                src/game.cpp
+                src/spaceship.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILE})
 target_link_libraries(${PROJECT_NAME} raylib)
