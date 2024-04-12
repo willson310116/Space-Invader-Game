@@ -1,14 +1,13 @@
 #include <iostream>
 #include "game.hpp"
 
-Game::Game(/* args */)
+Game::Game()
 {
-
+    obstacles = CreateObstacles(5);
 }
 
 Game::~Game()
-{
-    
+{   
 }
 
 void Game::Update()
@@ -26,9 +25,10 @@ void Game::Draw()
 {
     spaceship.Draw();
     for (auto& laser : spaceship.lasers)
-    {
         laser.Draw();
-    }
+    for (auto& obstacle : obstacles)
+        obstacle.Draw();
+
 }
 
 void Game::HandleInput()
@@ -73,4 +73,18 @@ void Game::DeleteInactiveLaser()
     //     if (!spaceship.lasers[i].active)
     //         spaceship.lasers.erase(spaceship.lasers.begin()+i);
     // }
+}
+
+std::vector<Obstacle> Game::CreateObstacles(int numObstacles)
+{
+    int obstacleWidth = Obstacle::grid[0].size() * 3;
+    float gapBetweenObstacles = (GetScreenWidth() - numObstacles * obstacleWidth) / (numObstacles + 1);
+    for (int i = 0; i < numObstacles; i++)
+    {
+        float offsetX = (i + 1) * gapBetweenObstacles + i * obstacleWidth;
+        // obstacles.push_back(
+        //     Obstacle({offsetX, static_cast<float>(GetScreenHeight() - 100)}));
+        obstacles.emplace_back(Vector2{offsetX, static_cast<float>(GetScreenHeight() - 100)});
+    }
+    return obstacles;
 }

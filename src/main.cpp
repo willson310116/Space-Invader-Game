@@ -21,6 +21,7 @@ int main()
         ClearBackground(grey);
         game.Draw();
 
+
         EndDrawing();
     }
 
