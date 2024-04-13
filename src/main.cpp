@@ -20,8 +20,7 @@ int main()
         BeginDrawing();
         ClearBackground(grey);
         game.Draw();
-
-
+        
         EndDrawing();
     }
 

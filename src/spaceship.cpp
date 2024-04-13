@@ -57,7 +57,7 @@ void Spaceship::Fire()
         // lasers.push_back(
         //     Laser({position.x + image.width/2 - 2, position.y}, -6));
         lasers.emplace_back(
-            Vector2{position.x + image.width/2 - 2, position.y}, -6);
+            Vector2{position.x + image.width/2 - 2, position.y}, -6, 1);
         lastFireTime = GetTime();
     }
 }

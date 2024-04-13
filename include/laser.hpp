@@ -4,7 +4,7 @@
 class Laser
 {
 public:
-    Laser(Vector2 position, int speed);
+    Laser(Vector2 position, int speed, int type);
     ~Laser();
     
     void Update();
@@ -14,5 +14,6 @@ public:
 private:
     Vector2 position;
     int speed;
+    Color color;
 };
 
