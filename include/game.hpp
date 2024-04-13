@@ -2,6 +2,7 @@
 #include "spaceship.hpp"
 #include "obstacle.hpp"
 #include "alien.hpp"
+#include "mysteryship.hpp"
 
 class Game
 {
@@ -27,5 +28,8 @@ private:
     void AlienFire();
     constexpr static float alienFireInterval = 0.35;
     float timeLastAlienFired;
+    Mysteryship mysteryship;
+    float mysteryshipSpawnInterval;
+    float timeLastSpawn;
 };
 
