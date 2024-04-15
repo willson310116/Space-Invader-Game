@@ -29,6 +29,19 @@ void Mysteryship::Spawn()
     alive = true;
 }
 
+Rectangle Mysteryship::GetRect()
+{
+    if (alive)
+    {
+        return {position.x, position.y,
+                static_cast<float>(image.width),
+                static_cast<float>(image.height)};
+    }
+    else
+    {
+        return {position.x, position.y, 0, 0};
+    }
+}
 
 void Mysteryship::Update()
 {

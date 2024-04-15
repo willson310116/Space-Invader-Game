@@ -14,6 +14,7 @@ public:
     void MoveUp();
     void MoveDown();
     void Fire();
+    Rectangle GetRect();
 
     std::vector<Laser> lasers;
 

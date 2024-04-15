@@ -61,3 +61,8 @@ void Spaceship::Fire()
         lastFireTime = GetTime();
     }
 }
+
+Rectangle Spaceship::GetRect()
+{
+    return {position.x, position.y, static_cast<float>(image.width), static_cast<float>(image.height)};
+}
