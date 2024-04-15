@@ -14,6 +14,8 @@ public:
     void Update();
     void HandleInput();
 
+    bool run;
+
 private:
     Spaceship spaceship;
     void DeleteInactiveLaser();
@@ -32,5 +34,9 @@ private:
     float mysteryshipSpawnInterval;
     float timeLastSpawn;
     void CheckCollisions();
+    int lives;
+    void GameOver();
+    void Reset();
+    void InitGame();
 };
 

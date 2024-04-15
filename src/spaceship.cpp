@@ -66,3 +66,13 @@ Rectangle Spaceship::GetRect()
 {
     return {position.x, position.y, static_cast<float>(image.width), static_cast<float>(image.height)};
 }
+
+void Spaceship::Reset()
+{
+    position.x = (GetScreenWidth() - image.width) / 2;
+    position.y = GetScreenHeight() - image.height;
+    // speed.x = 7;
+    // speed.y = 7;
+    // lastFireTime = 0.0;
+    lasers.clear();
+}
