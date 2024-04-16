@@ -4,7 +4,7 @@ Spaceship::Spaceship()
 {
     image = LoadTexture("../asset/spaceship.png");
     position.x = (GetScreenWidth() - image.width) / 2;
-    position.y = GetScreenHeight() - image.height;
+    position.y = GetScreenHeight() - image.height - 100;
     speed.x = 7;
     speed.y = 7;
     lastFireTime = 0.0;
@@ -23,15 +23,15 @@ void Spaceship::Draw()
 void Spaceship::MoveLeft()
 {
     position.x -= speed.x;
-    if (position.x < 0)
-        position.x = 0;
+    if (position.x < 25)
+        position.x = 25;
 }
 
 void Spaceship::MoveRight()
 {
     position.x += speed.x;
-    if (position.x > GetScreenWidth() - image.width)
-        position.x = GetScreenWidth() - image.width;
+    if (position.x > GetScreenWidth() - image.width - 25)
+        position.x = GetScreenWidth() - image.width - 25;
 }
 
 void Spaceship::MoveUp()
@@ -70,7 +70,7 @@ Rectangle Spaceship::GetRect()
 void Spaceship::Reset()
 {
     position.x = (GetScreenWidth() - image.width) / 2;
-    position.y = GetScreenHeight() - image.height;
+    position.y = GetScreenHeight() - image.height - 100;
     // speed.x = 7;
     // speed.y = 7;
     // lastFireTime = 0.0;

@@ -15,6 +15,7 @@ public:
     void HandleInput();
 
     bool run;
+    int lives;
 
 private:
     Spaceship spaceship;
@@ -34,7 +35,6 @@ private:
     float mysteryshipSpawnInterval;
     float timeLastSpawn;
     void CheckCollisions();
-    int lives;
     void GameOver();
     void Reset();
     void InitGame();

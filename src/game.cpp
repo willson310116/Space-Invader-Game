@@ -70,10 +70,10 @@ void Game::HandleInput()
             spaceship.MoveLeft();
         else if (IsKeyDown(KEY_RIGHT))
             spaceship.MoveRight();
-        else if (IsKeyDown(KEY_UP))
-            spaceship.MoveUp();
-        else if (IsKeyDown(KEY_DOWN))
-            spaceship.MoveDown();
+        // else if (IsKeyDown(KEY_UP))
+        //     spaceship.MoveUp();
+        // else if (IsKeyDown(KEY_DOWN))
+        //     spaceship.MoveDown();
         else if (IsKeyDown(KEY_SPACE))
             spaceship.Fire();
     }
@@ -128,7 +128,7 @@ std::vector<Obstacle> Game::CreateObstacles(int numObstacles)
         float offsetX = (i + 1) * gapBetweenObstacles + i * obstacleWidth;
         // obstacles.push_back(
         //     Obstacle({offsetX, static_cast<float>(GetScreenHeight() - 100)}));
-        obstacles.emplace_back(Vector2{offsetX, static_cast<float>(GetScreenHeight() - 100)});
+        obstacles.emplace_back(Vector2{offsetX, static_cast<float>(GetScreenHeight() - 200)});
     }
     return obstacles;
 }
@@ -163,13 +163,13 @@ void Game::MoveAliens()
 {
     for (auto& alien : aliens)
     {
-        if (alien.position.x + alien.alienImages[alien.type - 1].width > GetScreenWidth())
+        if (alien.position.x + alien.alienImages[alien.type - 1].width > GetScreenWidth() - 25)
         {
             aliensDirection = -1;
             MoveDownAliens(6);
         }
             
-        else if (alien.position.x < 0)
+        else if (alien.position.x < 25)
         {
             aliensDirection = 1;
             MoveDownAliens(6);

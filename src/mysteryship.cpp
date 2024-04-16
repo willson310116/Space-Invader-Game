@@ -18,12 +18,12 @@ void Mysteryship::Spawn()
 
     if (side == 0)
     {
-        position.x = 0;
+        position.x = 25;
         speed = 3;
     }
     else
     {
-        position.x = GetScreenWidth() - image.width;
+        position.x = GetScreenWidth() - image.width - 25;
         speed = -3;
     }
     alive = true;
@@ -48,7 +48,7 @@ void Mysteryship::Update()
     if (alive)
     {
         position.x += speed;
-        if (position.x > GetScreenWidth() - image.width || position.x < 0)
+        if (position.x > GetScreenWidth() - image.width - 25 || position.x < 25)
             alive = false;
     }
 }
