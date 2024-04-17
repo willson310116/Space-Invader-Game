@@ -4,12 +4,17 @@
 
 Game::Game()
 {
+    music = LoadMusicStream("../asset/sounds/music.ogg");
+    explosionSound = LoadSound("../asset/sounds/explosion.ogg");
+    PlayMusicStream(music);
     InitGame();
 }
 
 Game::~Game()
 {
     Alien::UnloadImages();   
+    UnloadMusicStream(music);
+    UnloadSound(explosionSound);
 }
 
 void Game::Update()
@@ -17,18 +22,9 @@ void Game::Update()
     // dont run anything if gameover
     if (run)
     {
-        double curTime = GetTime();
-        if (curTime - timeLastSpawn > mysteryshipSpawnInterval)
-        {
-            mysteryship.Spawn();
-            timeLastSpawn = GetTime();
-            mysteryshipSpawnInterval = GetRandomValue(10, 20);
-        }
-
-        for (auto& laser : spaceship.lasers)
-        {
-            laser.Update();
-        }
+        SpawnMystership();
+        spaceship.Update();
+        
         MoveAliens();
         AlienFire();
         for (auto& laser : alienLasers)
@@ -188,6 +184,17 @@ void Game::MoveDownAliens(int distance)
     }
 }
 
+void Game::SpawnMystership()
+{
+    double curTime = GetTime();
+    if (curTime - timeLastSpawn > mysteryshipSpawnInterval)
+    {
+        mysteryship.Spawn();
+        timeLastSpawn = GetTime();
+        mysteryshipSpawnInterval = GetRandomValue(10, 20);
+    }
+}
+
 void Game::AlienFire()
 {
     double curTime = GetTime();
@@ -214,6 +221,7 @@ void Game::CheckCollisions()
         {
             if (CheckCollisionRecs(it->GetRect(), laser.GetRect()))
             {
+                PlaySound(explosionSound);
                 AddScore(it);
                 CheckHighScore();
                 it = aliens.erase(it);
@@ -240,6 +248,7 @@ void Game::CheckCollisions()
 
         if (mysteryship.alive && CheckCollisionRecs(mysteryship.GetRect(), laser.GetRect()))
         {
+            PlaySound(explosionSound);
             mysteryship.alive = false;
             laser.active = false;
             GetMyteryshipReward();

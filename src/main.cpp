@@ -19,6 +19,7 @@ int main()
     Color yellow = {243, 216, 63, 255};
 
     InitWindow(windowWidth + offset, windowHeight + 2 * offset, "C++ space invader");
+    InitAudioDevice();
     SetTargetFPS(60);
     Font font = LoadFontEx("../asset/font/monogram.ttf", 64, 0, 0);
     Texture2D spaceshipImage = LoadTexture("../asset/graphics/spaceship.png");
@@ -27,6 +28,7 @@ int main()
     
     while (WindowShouldClose() == false)
     {
+        UpdateMusicStream(game.music);
         game.HandleInput();
         game.Update();
         
@@ -69,5 +71,6 @@ int main()
     }
 
     CloseWindow();
+    CloseAudioDevice();
     return 0;
 }

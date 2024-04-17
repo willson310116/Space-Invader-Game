@@ -9,6 +9,7 @@ public:
     Spaceship();
     ~Spaceship();
     void Draw();
+    void Update();
     void MoveLeft();
     void MoveRight();
     void MoveUp();
@@ -24,4 +25,5 @@ private:
     Vector2 position;
     Vector2 speed;
     double lastFireTime;
+    Sound laserSound;
 };

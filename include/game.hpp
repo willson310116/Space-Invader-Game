@@ -18,6 +18,7 @@ public:
     int lives;      // player's live
     int score;      // player's score
     int highScore;  // history high score
+    Music music;
 
 private:
     Spaceship spaceship;
@@ -45,11 +46,15 @@ private:
     void CheckHighScore();
     void SaveHighScoreToFile(int score);
     int LoadHighScoreFromFile();
+    Sound explosionSound;
     
-    // alien-wise
+    // alien
     void AlienFire();
     void MoveAliens();
     void MoveDownAliens(int distance);
+
+    // mysteryship
+    void SpawnMystership();
     
     // creating stuff
     std::vector<Alien> CreateAliens();

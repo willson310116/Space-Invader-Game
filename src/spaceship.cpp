@@ -8,16 +8,24 @@ Spaceship::Spaceship()
     speed.x = 7;
     speed.y = 7;
     lastFireTime = 0.0;
+    laserSound = LoadSound("../asset/sounds/laser.ogg");
 }
 
 Spaceship::~Spaceship()
 {
     UnloadTexture(image);
+    UnloadSound(laserSound);
 }
 
 void Spaceship::Draw()
 {
     DrawTextureV(image, position, WHITE);
+}
+
+void Spaceship::Update()
+{
+    for (auto& laser : lasers)
+        laser.Update();
 }
 
 void Spaceship::MoveLeft()
@@ -59,6 +67,7 @@ void Spaceship::Fire()
         lasers.emplace_back(
             Vector2{position.x + image.width/2 - 2, position.y}, -6, 1);
         lastFireTime = GetTime();
+        PlaySound(laserSound);
     }
 }
 
