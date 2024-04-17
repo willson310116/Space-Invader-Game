@@ -1,5 +1,13 @@
 #include <raylib.h>
+#include <string>
 #include "game.hpp"
+
+std::string FormatWithLeadingZeros(int number, int width)
+{
+    std::string numberText = std::to_string(number);
+    int leadingZeros = width - numberText.size();
+    return std::string(leadingZeros, '0') + numberText;
+}
 
 int main()
 {
@@ -45,6 +53,13 @@ int main()
             DrawTextureV(spaceshipImage, {x, 740}, WHITE);
             x += 50;
         }
+        
+        // std::string score = "SCORE: " + std::to_string(game.score);
+        // DrawTextEx(font, score.c_str(), {50, 15}, 36, 2, yellow);
+        DrawTextEx(font, "SCORE", {50, 15}, 36, 2, yellow);
+        std::string scoreText = FormatWithLeadingZeros(game.score, 5);
+        DrawTextEx(font, scoreText.c_str(), {50, 40}, 36, 2, yellow);
+        
 
         EndDrawing();
     }

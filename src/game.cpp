@@ -213,6 +213,7 @@ void Game::CheckCollisions()
         {
             if (CheckCollisionRecs(it->GetRect(), laser.GetRect()))
             {
+                AddScore(it);
                 it = aliens.erase(it);
                 laser.active = false;
             }
@@ -239,6 +240,7 @@ void Game::CheckCollisions()
         {
             mysteryship.alive = false;
             laser.active = false;
+            GetMyteryshipReward();
         }
     }
 
@@ -317,4 +319,21 @@ void Game::InitGame()
     mysteryshipSpawnInterval = GetRandomValue(10, 20);
     lives = 3;
     run = true;
+    score = 0;
+}
+
+void Game::AddScore(std::vector<Alien>::iterator it)
+{
+    if (it->type == 1)
+        score += 100;
+    else if (it->type == 2)
+        score += 200;
+    else if (it->type == 3)
+        score += 300;
+}
+
+void Game::GetMyteryshipReward()
+{
+    // TODO: add randomize reward
+    score += 500;
 }

@@ -16,6 +16,7 @@ public:
 
     bool run;
     int lives;
+    int score;
 
 private:
     Spaceship spaceship;
@@ -38,5 +39,8 @@ private:
     void GameOver();
     void Reset();
     void InitGame();
+    void AddScore(std::vector<Alien>::iterator it);
+    void GetMyteryshipReward();
 };
+
 
