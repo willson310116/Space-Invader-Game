@@ -10,16 +10,16 @@ Alien::Alien(int type, Vector2 position)
         switch (type)
         {
         case 1:
-            alienImages[0] = LoadTexture("../asset/alien_1.png");
+            alienImages[0] = LoadTexture("../asset/graphics/alien_1.png");
             break;
         case 2:
-            alienImages[1] = LoadTexture("../asset/alien_2.png");
+            alienImages[1] = LoadTexture("../asset/graphics/alien_2.png");
             break;
         case 3:
-            alienImages[2] = LoadTexture("../asset/alien_3.png");
+            alienImages[2] = LoadTexture("../asset/graphics/alien_3.png");
             break;
         default:
-            alienImages[0] = LoadTexture("../asset/alien_1.png");
+            alienImages[0] = LoadTexture("../asset/graphics/alien_1.png");
             break;
         }
     }

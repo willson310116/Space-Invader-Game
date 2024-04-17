@@ -14,31 +14,48 @@ public:
     void Update();
     void HandleInput();
 
-    bool run;
-    int lives;
-    int score;
+    bool run;       // whether game is currently running
+    int lives;      // player's live
+    int score;      // player's score
+    int highScore;  // history high score
 
 private:
     Spaceship spaceship;
-    void DeleteInactiveLaser();
     std::vector<Obstacle> obstacles;
-    std::vector<Obstacle> CreateObstacles(int numObstacles);
-    std::vector<Alien> aliens;
-    std::vector<Alien> CreateAliens();
-    void MoveAliens();
+    
+    // aliens
     int aliensDirection;
-    void MoveDownAliens(int distance);
+    std::vector<Alien> aliens;
     std::vector<Laser> alienLasers;
-    void AlienFire();
-    constexpr static float alienFireInterval = 0.35;
     float timeLastAlienFired;
+    constexpr static float alienFireInterval = 0.35;
+    
+    // mysteryship
     Mysteryship mysteryship;
-    float mysteryshipSpawnInterval;
     float timeLastSpawn;
-    void CheckCollisions();
-    void GameOver();
-    void Reset();
+    float mysteryshipSpawnInterval;
+
+private:
+    // general
     void InitGame();
+    void Reset();
+    void GameOver();
+    void DeleteInactiveLaser();
+    void CheckCollisions();
+    void CheckHighScore();
+    void SaveHighScoreToFile(int score);
+    int LoadHighScoreFromFile();
+    
+    // alien-wise
+    void AlienFire();
+    void MoveAliens();
+    void MoveDownAliens(int distance);
+    
+    // creating stuff
+    std::vector<Alien> CreateAliens();
+    std::vector<Obstacle> CreateObstacles(int numObstacles);
+    
+    // scoring
     void AddScore(std::vector<Alien>::iterator it);
     void GetMyteryshipReward();
 };

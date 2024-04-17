@@ -2,7 +2,7 @@
 
 Mysteryship::Mysteryship()
 {
-    image = LoadTexture("../asset/mystery.png");
+    image = LoadTexture("../asset/graphics/mystery.png");
     alive = false;
 }
 

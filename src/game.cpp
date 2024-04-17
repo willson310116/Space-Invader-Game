@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include "game.hpp"
 
 Game::Game()
@@ -214,6 +215,7 @@ void Game::CheckCollisions()
             if (CheckCollisionRecs(it->GetRect(), laser.GetRect()))
             {
                 AddScore(it);
+                CheckHighScore();
                 it = aliens.erase(it);
                 laser.active = false;
             }
@@ -241,6 +243,7 @@ void Game::CheckCollisions()
             mysteryship.alive = false;
             laser.active = false;
             GetMyteryshipReward();
+            CheckHighScore();
         }
     }
 
@@ -250,7 +253,7 @@ void Game::CheckCollisions()
         if (CheckCollisionRecs(laser.GetRect(), spaceship.GetRect()))
         {
             laser.active = false;
-            std::cout << "Spaceship hit" << std::endl;
+            // std::cout << "Spaceship hit" << std::endl;
             lives -= 1;
             if (lives == 0)
                 GameOver();
@@ -288,11 +291,45 @@ void Game::CheckCollisions()
         }
         if (CheckCollisionRecs(alien.GetRect(), spaceship.GetRect()))
         {
-            std::cout << "Spaceship get hit by alien" << std::endl;
+            // std::cout << "Spaceship get hit by alien" << std::endl;
             GameOver();
         }
             
     }
+}
+
+void Game::CheckHighScore()
+{
+    if (score > highScore)
+        highScore = score;
+    SaveHighScoreToFile(highScore);
+}
+
+void Game::SaveHighScoreToFile(int score)
+{
+    std::ofstream file("highscore.txt");
+    if (file.is_open())
+    {
+        file << score;
+        file.close();
+    }
+    else
+        std::cerr << "Failed to save highscore to file!" << std::endl;
+}
+
+int Game::LoadHighScoreFromFile()
+{
+    int loadedScore = 0;
+    std::ifstream file("highscore.txt");
+    if (file.is_open())
+    {
+        file >> loadedScore;
+        file.close();
+    }
+    else
+        std::cerr << "Failed to load highscore from file!" << std::endl;
+    
+    return loadedScore;
 }
 
 void Game::GameOver()
@@ -320,6 +357,7 @@ void Game::InitGame()
     lives = 3;
     run = true;
     score = 0;
+    highScore = LoadHighScoreFromFile();
 }
 
 void Game::AddScore(std::vector<Alien>::iterator it)

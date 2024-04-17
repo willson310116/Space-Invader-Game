@@ -21,7 +21,7 @@ int main()
     InitWindow(windowWidth + offset, windowHeight + 2 * offset, "C++ space invader");
     SetTargetFPS(60);
     Font font = LoadFontEx("../asset/font/monogram.ttf", 64, 0, 0);
-    Texture2D spaceshipImage = LoadTexture("../asset/spaceship.png");
+    Texture2D spaceshipImage = LoadTexture("../asset/graphics/spaceship.png");
     // create instance after window initialization
     Game game;
     
@@ -59,6 +59,10 @@ int main()
         DrawTextEx(font, "SCORE", {50, 15}, 36, 2, yellow);
         std::string scoreText = FormatWithLeadingZeros(game.score, 5);
         DrawTextEx(font, scoreText.c_str(), {50, 40}, 36, 2, yellow);
+
+        DrawTextEx(font, "HIGH-SCORE", {570, 15}, 36, 2, yellow);
+        std::string highScoreText = FormatWithLeadingZeros(game.highScore, 5);
+        DrawTextEx(font, highScoreText.c_str(), {665, 40}, 36, 2, yellow);
         
 
         EndDrawing();
