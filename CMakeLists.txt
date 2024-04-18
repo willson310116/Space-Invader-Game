@@ -23,7 +23,8 @@ set(SOURCE_FILE src/main.cpp
                 src/block.cpp
                 src/obstacle.cpp
                 src/alien.cpp
-                src/mysteryship.cpp)
+                src/mysteryship.cpp
+                src/menu.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILE})
 target_link_libraries(${PROJECT_NAME} raylib)

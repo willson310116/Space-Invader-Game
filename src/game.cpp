@@ -1,12 +1,21 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 #include "game.hpp"
+
+std::string FormatWithLeadingZeros(int number, int width)
+{
+    std::string numberText = std::to_string(number);
+    int leadingZeros = width - numberText.size();
+    return std::string(leadingZeros, '0') + numberText;
+}
 
 Game::Game()
 {
-    music = LoadMusicStream("../asset/sounds/music.ogg");
+    music = LoadMusicStream("../asset/sounds/golden_wind.mp3");
     explosionSound = LoadSound("../asset/sounds/explosion.ogg");
     PlayMusicStream(music);
+    SetMusicVolume(music, 0.25);
     InitGame();
 }
 
@@ -33,6 +42,10 @@ void Game::Update()
         // std::cout << "vector size: " << alienLasers.size() << std::endl;
         mysteryship.Update();
         CheckCollisions();
+        if (aliens.size() == 0)
+        {
+            GameOver();
+        }
     }
     else
     {
@@ -47,6 +60,7 @@ void Game::Update()
 
 void Game::Draw()
 {
+    DrawLayout();
     spaceship.Draw();
     for (auto& laser : spaceship.lasers)
         laser.Draw();
@@ -56,7 +70,7 @@ void Game::Draw()
         alien.Draw();
     for (auto& laser : alienLasers)
         laser.Draw();
-    mysteryship.Draw();
+    mysteryship.Draw();   
 }
 
 void Game::HandleInput()
@@ -341,9 +355,40 @@ int Game::LoadHighScoreFromFile()
     return loadedScore;
 }
 
+void Game::DrawLayout()
+{
+    DrawRectangleRoundedLines({10, 10, 780, 780}, 0.18f, 20, 2, yellow);
+    DrawLineEx({25, 730}, {775, 730}, 3, yellow);
+    
+    if (run)
+        DrawTextEx(font, "LEVEL 01", {570, 740}, 34, 2, yellow);
+    else
+    {
+        DrawTextEx(font, "GAME OVER", {570, 740}, 34, 2, yellow);
+        DrawTextEx(font, "PRESS ENTER TO RESTART", {180, 50}, 36, 2, red);
+        // DrawTextEx(font, "PRESS ESC TO LEAVE", {200, 80}, 36, 2, red);
+    }
+
+    DrawTextEx(font, "LIVES", {70, 740}, 34, 2, yellow);
+    float x = 180.0;
+    for (int i = 0; i < lives; i++)
+    {
+        DrawTextureV(spaceshipImage, {x, 740}, WHITE);
+        x += 50;
+    }
+    DrawTextEx(font, "SCORE", {50, 15}, 36, 2, yellow);
+    std::string scoreText = FormatWithLeadingZeros(score, 5);
+    DrawTextEx(font, scoreText.c_str(), {50, 40}, 36, 2, yellow);
+
+    DrawTextEx(font, "HIGH-SCORE", {570, 15}, 36, 2, yellow);
+    std::string highScoreText = FormatWithLeadingZeros(highScore, 5);
+    DrawTextEx(font, highScoreText.c_str(), {665, 40}, 36, 2, yellow);
+
+}
+
 void Game::GameOver()
 {
-    std::cout << "Game over" << std::endl;
+    // std::cout << "Game over" << std::endl;
     run = false;
 }
 

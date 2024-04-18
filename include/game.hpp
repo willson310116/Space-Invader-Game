@@ -4,6 +4,8 @@
 #include "alien.hpp"
 #include "mysteryship.hpp"
 
+std::string FormatWithLeadingZeros(int number, int width);
+
 class Game
 {
 public:
@@ -19,6 +21,10 @@ public:
     int score;      // player's score
     int highScore;  // history high score
     Music music;
+    Color yellow = {243, 216, 63, 255};
+    Color red = {225, 10, 10, 255};
+    Font font = LoadFontEx("../asset/font/monogram.ttf", 64, 0, 0);
+    Texture2D spaceshipImage = LoadTexture("../asset/graphics/spaceship.png");
 
 private:
     Spaceship spaceship;
@@ -47,6 +53,7 @@ private:
     void SaveHighScoreToFile(int score);
     int LoadHighScoreFromFile();
     Sound explosionSound;
+    void DrawLayout();
     
     // alien
     void AlienFire();
