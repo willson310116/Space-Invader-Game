@@ -59,7 +59,7 @@ void Spaceship::MoveDown()
 void Spaceship::Fire()
 {
     // add delay between fires
-    if (GetTime() - lastFireTime >= 0.35)
+    if (GetTime() - lastFireTime >= fireInterval)
     {
         // the laser has 4 pixel of width, so minus 2 to centerize
         // lasers.push_back(

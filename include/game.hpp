@@ -3,8 +3,11 @@
 #include "obstacle.hpp"
 #include "alien.hpp"
 #include "mysteryship.hpp"
+#include "menu.hpp"
+#include "optionlist.hpp"
 
 std::string FormatWithLeadingZeros(int number, int width);
+extern GameScreen currentScreen;
 
 class Game
 {
@@ -20,6 +23,8 @@ public:
     int lives;      // player's live
     int score;      // player's score
     int highScore;  // history high score
+    Menu menu;
+    OptionList optionList;
     Music music;
     Color yellow = {243, 216, 63, 255};
     Color red = {225, 10, 10, 255};
@@ -35,7 +40,7 @@ private:
     std::vector<Alien> aliens;
     std::vector<Laser> alienLasers;
     float timeLastAlienFired;
-    constexpr static float alienFireInterval = 0.35;
+    constexpr static float alienFireInterval = 0.5;
     
     // mysteryship
     Mysteryship mysteryship;
@@ -64,7 +69,7 @@ private:
     void SpawnMystership();
     
     // creating stuff
-    std::vector<Alien> CreateAliens();
+    std::vector<Alien> CreateAliens(int row, int col);
     std::vector<Obstacle> CreateObstacles(int numObstacles);
     
     // scoring

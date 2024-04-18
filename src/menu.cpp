@@ -4,7 +4,6 @@ void Menu::InitButton(Button* button, Rectangle rect, Color color)
 {
     button->rect = rect;
     button->color = color;
-    button->clicked = false;
 }
 
 bool Menu::IsMouseOverButton(Button* button)
@@ -18,9 +17,6 @@ void Menu::handleButton(Button* button)
         button->color = BLUE;
     else
         button->color = ORANGE;
-    
-    if (IsMouseOverButton(button) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-        button->clicked = true;
 }
 
 Menu::Menu()
@@ -38,6 +34,10 @@ void Menu::Update()
 {
     handleButton(&startButton);
     handleButton(&exitButton);
+    if (IsMouseOverButton(&startButton) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+        currentScreen = GameScreen::GAMEPLAY;
+    if (IsMouseOverButton(&exitButton) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+        currentScreen = GameScreen::EXIT;
 }
 
 void Menu::Draw()

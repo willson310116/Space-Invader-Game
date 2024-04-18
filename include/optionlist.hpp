@@ -5,17 +5,20 @@
 
 extern GameScreen currentScreen;
 
-class Menu
+// TODO: use ploymorphism to replace this and menu class
+class OptionList
 {
 public:
-    Menu();
+    OptionList();
     void Init();
     void Update();
     void Draw();
-    Button startButton;
+    Button restartButton;
     Button exitButton;
-private:
+    Button menuButton;
     void InitButton(Button* button, Rectangle rect, Color color);
     bool IsMouseOverButton(Button* button);
     void handleButton(Button* button);
+private:
+    void DrawButton(Button* button, const char* text);
 };

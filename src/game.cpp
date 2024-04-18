@@ -33,24 +33,37 @@ void Game::Update()
     {
         SpawnMystership();
         spaceship.Update();
+        mysteryship.Update();
+        AlienFire();
+        for (auto& laser : alienLasers) laser.Update();
         
         MoveAliens();
-        AlienFire();
-        for (auto& laser : alienLasers)
-            laser.Update();
         DeleteInactiveLaser();
-        // std::cout << "vector size: " << alienLasers.size() << std::endl;
-        mysteryship.Update();
         CheckCollisions();
-        if (aliens.size() == 0)
-        {
-            GameOver();
-        }
+        if (aliens.size() == 0) GameOver();
     }
+
     else
     {
-        if (IsKeyDown(KEY_ENTER))
+        optionList.Update();
+        optionList.Draw();
+        if (optionList.IsMouseOverButton(&optionList.restartButton) &&
+            IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
+            Reset();
+            InitGame();
+        }
+
+        else if (optionList.IsMouseOverButton(&optionList.exitButton) &&
+            IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+        {
+            currentScreen = GameScreen::EXIT;
+        }
+        
+        else if (optionList.IsMouseOverButton(&optionList.menuButton) &&
+            IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+        {
+            currentScreen = GameScreen::MENU;
             Reset();
             InitGame();
         }
@@ -81,14 +94,9 @@ void Game::HandleInput()
             spaceship.MoveLeft();
         else if (IsKeyDown(KEY_RIGHT))
             spaceship.MoveRight();
-        // else if (IsKeyDown(KEY_UP))
-        //     spaceship.MoveUp();
-        // else if (IsKeyDown(KEY_DOWN))
-        //     spaceship.MoveDown();
         else if (IsKeyDown(KEY_SPACE))
             spaceship.Fire();
-    }
-    
+    } 
 }
 
 // limit the amount of lasers in laser vector
@@ -144,15 +152,15 @@ std::vector<Obstacle> Game::CreateObstacles(int numObstacles)
     return obstacles;
 }
 
-std::vector<Alien> Game::CreateAliens()
+std::vector<Alien> Game::CreateAliens(int row, int col)
 {
     std::vector<Alien> aliens;
     int gapBetweenAliens = 55;
     int offsetX = 75;
     int offsetY = 110;
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < row; i++)
     {
-        for (int j = 0; j < 11; j++)
+        for (int j = 0; j < col; j++)
         {
             int alienType;
             if (i == 0)
@@ -364,9 +372,10 @@ void Game::DrawLayout()
         DrawTextEx(font, "LEVEL 01", {570, 740}, 34, 2, yellow);
     else
     {
-        DrawTextEx(font, "GAME OVER", {570, 740}, 34, 2, yellow);
-        DrawTextEx(font, "PRESS ENTER TO RESTART", {180, 50}, 36, 2, red);
-        // DrawTextEx(font, "PRESS ESC TO LEAVE", {200, 80}, 36, 2, red);
+        if (aliens.size() == 0)
+            DrawTextEx(font, "YOU WON", {570, 740}, 34, 2, yellow);
+        else
+            DrawTextEx(font, "GAME OVER", {570, 740}, 34, 2, yellow);
     }
 
     DrawTextEx(font, "LIVES", {70, 740}, 34, 2, yellow);
@@ -403,7 +412,7 @@ void Game::Reset()
 void Game::InitGame()
 {
     obstacles = CreateObstacles(5);
-    aliens = CreateAliens();
+    aliens = CreateAliens(4, 8);
     aliensDirection = 1;
     timeLastAlienFired = 0;
     timeLastSpawn = 0;
@@ -427,5 +436,6 @@ void Game::AddScore(std::vector<Alien>::iterator it)
 void Game::GetMyteryshipReward()
 {
     // TODO: add randomize reward
+    // GetRandomValue(1, 5)
     score += 500;
 }

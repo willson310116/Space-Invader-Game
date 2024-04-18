@@ -26,4 +26,5 @@ private:
     Vector2 speed;
     double lastFireTime;
     Sound laserSound;
+    constexpr static float fireInterval = 0.5;
 };

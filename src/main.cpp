@@ -1,8 +1,7 @@
 #include <raylib.h>
 #include "game.hpp"
-#include "menu.hpp"
 
-enum class GameScreen { MENU = 0, GAMEPLAY};
+GameScreen currentScreen = GameScreen::MENU;
 
 int main()
 {
@@ -17,23 +16,16 @@ int main()
     
     // create instance after window initialization
     Game game;
-    Menu menu;
-    GameScreen currentScreen = GameScreen::MENU;
-    bool exitGame = false;
-
-    while (WindowShouldClose() == false && !exitGame)
+    
+    while (WindowShouldClose() == false && currentScreen != GameScreen::EXIT)
     {
         BeginDrawing();
         ClearBackground(grey);
         switch (currentScreen)
         {
         case GameScreen::MENU:
-            menu.Update();
-            menu.Draw();
-            if (menu.startButton.clicked)
-                currentScreen = GameScreen::GAMEPLAY;
-            else if (menu.exitButton.clicked)
-                exitGame = true;
+            game.menu.Update();
+            game.menu.Draw();
             break;
 
         case GameScreen::GAMEPLAY:
@@ -46,8 +38,6 @@ int main()
         default:
             break;
         }
-        
-
         EndDrawing();
     }
 
