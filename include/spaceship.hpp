@@ -1,13 +1,13 @@
 #pragma once
 #include <raylib.h>
 #include <vector>
-#include "laser.hpp"
+#include "Laser.hpp"
 
-class Spaceship
+class SpaceShip
 {
 public:
-    Spaceship();
-    ~Spaceship();
+    SpaceShip();
+    ~SpaceShip();
     void Draw();
     void Update();
     void MoveLeft();

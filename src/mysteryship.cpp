@@ -1,17 +1,17 @@
-#include "mysteryship.hpp"
+#include "MysteryShip.hpp"
 
-Mysteryship::Mysteryship()
+MysteryShip::MysteryShip()
 {
     image = LoadTexture("../asset/graphics/mystery.png");
     alive = false;
 }
 
-Mysteryship::~Mysteryship()
+MysteryShip::~MysteryShip()
 {
     UnloadTexture(image);
 }
 
-void Mysteryship::Spawn()
+void MysteryShip::Spawn()
 {
     position.y = 80;
     int side = GetRandomValue(0, 1);
@@ -29,7 +29,7 @@ void Mysteryship::Spawn()
     alive = true;
 }
 
-Rectangle Mysteryship::GetRect()
+Rectangle MysteryShip::GetRect()
 {
     if (alive)
     {
@@ -43,7 +43,7 @@ Rectangle Mysteryship::GetRect()
     }
 }
 
-void Mysteryship::Update()
+void MysteryShip::Update()
 {
     if (alive)
     {
@@ -53,7 +53,7 @@ void Mysteryship::Update()
     }
 }
 
-void Mysteryship::Draw()
+void MysteryShip::Draw()
 {
     if (alive)
         DrawTextureV(image, position, WHITE);

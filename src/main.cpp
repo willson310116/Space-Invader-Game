@@ -1,5 +1,5 @@
 #include <raylib.h>
-#include "game.hpp"
+#include "Game.hpp"
 
 GameState curGameState = GameState::MENU;
 

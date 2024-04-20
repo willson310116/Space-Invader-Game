@@ -17,15 +17,16 @@ FetchContent_MakeAvailable(raylib)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
 set(SOURCE_FILE src/main.cpp
-                src/game.cpp
-                src/spaceship.cpp
-                src/laser.cpp
-                src/block.cpp
-                src/obstacle.cpp
-                src/alien.cpp
-                src/mysteryship.cpp
-                src/menu.cpp
-                src/optionlist.cpp)
+                src/Game.cpp
+                src/SpaceShip.cpp
+                src/Laser.cpp
+                src/Block.cpp
+                src/Obstacle.cpp
+                src/Alien.cpp
+                src/MysteryShip.cpp
+                src/Menu.cpp
+                src/OptionList.cpp
+                src/ButtonHandler.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILE})
 target_link_libraries(${PROJECT_NAME} raylib)

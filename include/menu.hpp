@@ -1,7 +1,8 @@
 #pragma once
 #include <raylib.h>
-#include "button.hpp"
-#include "gamestate.hpp"
+#include "Button.hpp"
+#include "GameState.hpp"
+#include "ButtonHandler.hpp"
 
 extern GameState curGameState;
 
@@ -14,8 +15,4 @@ public:
     void Draw();
     Button startButton;
     Button exitButton;
-private:
-    void InitButton(Button* button, Rectangle rect, Color color);
-    bool IsMouseOverButton(Button* button);
-    void handleButton(Button* button);
 };

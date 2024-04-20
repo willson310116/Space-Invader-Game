@@ -1,6 +1,6 @@
-#include "spaceship.hpp"
+#include "SpaceShip.hpp"
 
-Spaceship::Spaceship()
+SpaceShip::SpaceShip()
 {
     image = LoadTexture("../asset/graphics/spaceship.png");
     position.x = (GetScreenWidth() - image.width) / 2;
@@ -12,52 +12,52 @@ Spaceship::Spaceship()
     laserSpeed = -6;
 }
 
-Spaceship::~Spaceship()
+SpaceShip::~SpaceShip()
 {
     UnloadTexture(image);
     UnloadSound(laserSound);
 }
 
-void Spaceship::Draw()
+void SpaceShip::Draw()
 {
     DrawTextureV(image, position, WHITE);
 }
 
-void Spaceship::Update()
+void SpaceShip::Update()
 {
     for (auto& laser : lasers)
         laser.Update();
 }
 
-void Spaceship::MoveLeft()
+void SpaceShip::MoveLeft()
 {
     position.x -= speed.x;
     if (position.x < 25)
         position.x = 25;
 }
 
-void Spaceship::MoveRight()
+void SpaceShip::MoveRight()
 {
     position.x += speed.x;
     if (position.x > GetScreenWidth() - image.width - 25)
         position.x = GetScreenWidth() - image.width - 25;
 }
 
-void Spaceship::MoveUp()
+void SpaceShip::MoveUp()
 {
     position.y -= speed.y;
     if (position.y < 0)
         position.y = 0;
 }
 
-void Spaceship::MoveDown()
+void SpaceShip::MoveDown()
 {
     position.y += speed.y;
     if (position.y > GetScreenHeight() - image.height)
         position.y = GetScreenHeight() - image.height;
 }
 
-void Spaceship::Fire()
+void SpaceShip::Fire()
 {
     // add delay between fires
     if (GetTime() - lastFireTime >= fireInterval)
@@ -72,12 +72,12 @@ void Spaceship::Fire()
     }
 }
 
-Rectangle Spaceship::GetRect()
+Rectangle SpaceShip::GetRect()
 {
     return {position.x, position.y, static_cast<float>(image.width), static_cast<float>(image.height)};
 }
 
-void Spaceship::Reset()
+void SpaceShip::Reset()
 {
     position.x = (GetScreenWidth() - image.width) / 2;
     position.y = GetScreenHeight() - image.height - 100;

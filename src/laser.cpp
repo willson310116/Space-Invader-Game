@@ -1,5 +1,5 @@
 #include <iostream>
-#include "laser.hpp"
+#include "Laser.hpp"
 
 Laser::Laser(Vector2 position, int speed, int type) :
     position(position), speed(speed), active(true)

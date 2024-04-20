@@ -1,4 +1,4 @@
-#include "block.hpp"
+#include "Block.hpp"
 
 Block::Block(Vector2 position) :
     position(position) {}

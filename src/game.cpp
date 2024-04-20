@@ -1,7 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "game.hpp"
+#include "Game.hpp"
+#include "ButtonHandler.hpp"
 
 std::string FormatWithLeadingZeros(int number, int width)
 {
@@ -64,20 +65,20 @@ void Game::Update()
     {
         optionList.Update();
         optionList.Draw();
-        if (optionList.IsMouseOverButton(&optionList.restartButton) &&
+        if (ButtonHandler::IsMouseOverButton(&optionList.restartButton) &&
             IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
             Reset();
             InitGame();
         }
 
-        else if (optionList.IsMouseOverButton(&optionList.exitButton) &&
+        else if (ButtonHandler::IsMouseOverButton(&optionList.exitButton) &&
                 IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
             curGameState = GameState::EXIT;
         }
         
-        else if (optionList.IsMouseOverButton(&optionList.menuButton) &&
+        else if (ButtonHandler::IsMouseOverButton(&optionList.menuButton) &&
                 IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
             curGameState = GameState::MENU;
@@ -91,7 +92,7 @@ void Game::Update()
 void Game::Draw()
 {
     DrawLayout();
-    DisplayMyteryshipReward();
+    DisplayMysteryshipReward();
     spaceship.Draw();
     for (auto& laser : spaceship.lasers)
         laser.Draw();
@@ -291,7 +292,7 @@ void Game::CheckCollisions()
             PlaySound(explosionSound);
             mysteryship.alive = false;
             laser.active = false;
-            GetMyteryshipReward();
+            GetMysteryshipReward();
             CheckHighScore();
         }
     }
@@ -435,7 +436,7 @@ void Game::AddScore(std::vector<Alien>::iterator it)
         score += 300;
 }
 
-void Game::GetMyteryshipReward()
+void Game::GetMysteryshipReward()
 {
     // TODO: add randomize reward
     int rewardNum = GetRandomValue(1, 5);
@@ -465,10 +466,9 @@ void Game::GetMyteryshipReward()
     default:
         break;
     }
-    
 }
 
-void Game::DisplayMyteryshipReward()
+void Game::DisplayMysteryshipReward()
 {
     double curTime = GetTime();
     if (curTime - timeLastDisplayReward <= rewardDisplayInterval)

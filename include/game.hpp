@@ -1,10 +1,10 @@
 #pragma once
-#include "menu.hpp"
-#include "alien.hpp"
-#include "obstacle.hpp"
-#include "spaceship.hpp"
-#include "optionlist.hpp"
-#include "mysteryship.hpp"
+#include "Menu.hpp"
+#include "Alien.hpp"
+#include "Obstacle.hpp"
+#include "SpaceShip.hpp"
+#include "OptionList.hpp"
+#include "MysteryShip.hpp"
 
 std::string FormatWithLeadingZeros(int number, int width);
 extern GameState curGameState;
@@ -32,7 +32,7 @@ public:
     Texture2D spaceshipImage = LoadTexture("../asset/graphics/spaceship.png");
 
 private:
-    Spaceship spaceship;
+    SpaceShip spaceship;
     std::vector<Obstacle> obstacles;
     
     // aliens
@@ -43,7 +43,7 @@ private:
     constexpr static float alienFireInterval = 0.5;
     
     // mysteryship
-    Mysteryship mysteryship;
+    MysteryShip mysteryship;
     float timeLastSpawn;
     float mysteryshipSpawnInterval;
     float timeLastDisplayReward;
@@ -77,8 +77,8 @@ private:
     
     // scoring
     void AddScore(std::vector<Alien>::iterator it);
-    void GetMyteryshipReward();
-    void DisplayMyteryshipReward();
+    void GetMysteryshipReward();
+    void DisplayMysteryshipReward();
 };
 
 

@@ -1,4 +1,4 @@
-#include "obstacle.hpp"
+#include "Obstacle.hpp"
 
 std::vector<std::vector<int>> Obstacle::grid = {
     {0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
@@ -27,8 +27,6 @@ Obstacle::Obstacle(Vector2 position)
             {
                 float pos_x = position.x + j * 3;
                 float pos_y = position.y + i * 3;
-                // Block block({pos_x, pos_y});
-                // blocks.push_back(block);
                 blocks.emplace_back(Vector2{pos_x, pos_y});
             }
         }

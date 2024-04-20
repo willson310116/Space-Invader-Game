@@ -1,9 +1,8 @@
 #pragma once
 #include <raylib.h>
-#include "button.hpp"
-#include "gamestate.hpp"
-
-extern GameState curGameState;
+#include "Button.hpp"
+#include "GameState.hpp"
+#include "ButtonHandler.hpp"
 
 // TODO: use ploymorphism to replace this and menu class
 class OptionList
@@ -16,9 +15,4 @@ public:
     Button restartButton;
     Button exitButton;
     Button menuButton;
-    void InitButton(Button* button, Rectangle rect, Color color);
-    bool IsMouseOverButton(Button* button);
-    void handleButton(Button* button);
-private:
-    void DrawButton(Button* button, const char* text);
 };

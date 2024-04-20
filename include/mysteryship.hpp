@@ -1,11 +1,11 @@
 #pragma once
 #include <raylib.h>
 
-class Mysteryship
+class MysteryShip
 {
 public:
-    Mysteryship();
-    ~Mysteryship();
+    MysteryShip();
+    ~MysteryShip();
     void Update();
     void Draw();
     void Spawn();
