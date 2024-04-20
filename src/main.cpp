@@ -25,8 +25,8 @@ int main()
         switch (curGameState)
         {
         case GameState::MENU:
-            game.menu.Update();
-            game.menu.Draw();
+            game.mainMenu.Update();
+            game.mainMenu.Draw();
             break;
 
         case GameState::GAMEPLAY:

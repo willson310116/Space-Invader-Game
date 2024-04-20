@@ -1,18 +1,12 @@
 #pragma once
-#include <raylib.h>
+#include <vector>
 #include "Button.hpp"
-#include "GameState.hpp"
-#include "ButtonHandler.hpp"
-
-extern GameState curGameState;
 
 class Menu
 {
 public:
-    Menu();
-    void Init();
-    void Update();
-    void Draw();
-    Button startButton;
-    Button exitButton;
+    virtual void Init() {}
+    virtual void Update() {}
+    virtual void Draw() {}
+    std::vector<Button> buttons;
 };

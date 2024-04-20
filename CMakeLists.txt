@@ -24,7 +24,7 @@ set(SOURCE_FILE src/main.cpp
                 src/Obstacle.cpp
                 src/Alien.cpp
                 src/MysteryShip.cpp
-                src/Menu.cpp
+                src/MainMenu.cpp
                 src/OptionList.cpp
                 src/ButtonHandler.cpp)
 

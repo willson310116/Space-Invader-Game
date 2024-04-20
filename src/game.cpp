@@ -64,21 +64,21 @@ void Game::Update()
     else
     {
         optionList.Update();
-        optionList.Draw();
-        if (ButtonHandler::IsMouseOverButton(&optionList.restartButton) &&
+        // optionList.Draw();
+        if (ButtonHandler::IsMouseOverButton(&optionList.buttons[optionList.START]) &&
             IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
             Reset();
             InitGame();
         }
 
-        else if (ButtonHandler::IsMouseOverButton(&optionList.exitButton) &&
+        else if (ButtonHandler::IsMouseOverButton(&optionList.buttons[optionList.EXIT]) &&
                 IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
             curGameState = GameState::EXIT;
         }
         
-        else if (ButtonHandler::IsMouseOverButton(&optionList.menuButton) &&
+        else if (ButtonHandler::IsMouseOverButton(&optionList.buttons[optionList.MENU]) &&
                 IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
             curGameState = GameState::MENU;
@@ -102,7 +102,11 @@ void Game::Draw()
         alien.Draw();
     for (auto& laser : alienLasers)
         laser.Draw();
-    mysteryship.Draw();   
+    mysteryship.Draw();
+    
+    if (!run)
+        optionList.Draw();
+
 }
 
 void Game::HandleInput()
@@ -438,7 +442,6 @@ void Game::AddScore(std::vector<Alien>::iterator it)
 
 void Game::GetMysteryshipReward()
 {
-    // TODO: add randomize reward
     int rewardNum = GetRandomValue(1, 5);
     timeLastDisplayReward = GetTime();
     switch (rewardNum)

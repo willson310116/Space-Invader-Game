@@ -1,5 +1,5 @@
 #pragma once
-#include "Menu.hpp"
+#include "MainMenu.hpp"
 #include "Alien.hpp"
 #include "Obstacle.hpp"
 #include "SpaceShip.hpp"
@@ -25,7 +25,7 @@ public:
     int highScore;  // history high score
     Music music;
     
-    Menu menu;
+    MainMenu mainMenu;
     OptionList optionList;
     
     Font font = LoadFontEx("../asset/font/monogram.ttf", 64, 0, 0);

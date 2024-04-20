@@ -1,22 +1,21 @@
 #pragma once
 #include <raylib.h>
 #include "Menu.hpp"
-#include "Button.hpp"
 #include "GameState.hpp"
 #include "ButtonHandler.hpp"
 
-// TODO: use ploymorphism to replace this and menu class
-class OptionList : public Menu
+extern GameState curGameState;
+
+class MainMenu : public Menu
 {
 public:
-    OptionList();
+    MainMenu();
     void Init() override;
     void Update() override;
     void Draw() override;
     enum ButtonIndex
     {
         START = 0,
-        MENU,
         EXIT,
         NUM_BUTTONS,
     };
