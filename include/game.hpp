@@ -1,13 +1,13 @@
 #pragma once
-#include "spaceship.hpp"
-#include "obstacle.hpp"
-#include "alien.hpp"
-#include "mysteryship.hpp"
 #include "menu.hpp"
+#include "alien.hpp"
+#include "obstacle.hpp"
+#include "spaceship.hpp"
 #include "optionlist.hpp"
+#include "mysteryship.hpp"
 
 std::string FormatWithLeadingZeros(int number, int width);
-extern GameScreen currentScreen;
+extern GameState curGameState;
 
 class Game
 {
@@ -23,11 +23,11 @@ public:
     int lives;      // player's live
     int score;      // player's score
     int highScore;  // history high score
+    Music music;
+    
     Menu menu;
     OptionList optionList;
-    Music music;
-    Color yellow = {243, 216, 63, 255};
-    Color red = {225, 10, 10, 255};
+    
     Font font = LoadFontEx("../asset/font/monogram.ttf", 64, 0, 0);
     Texture2D spaceshipImage = LoadTexture("../asset/graphics/spaceship.png");
 
@@ -46,6 +46,9 @@ private:
     Mysteryship mysteryship;
     float timeLastSpawn;
     float mysteryshipSpawnInterval;
+    float timeLastDisplayReward;
+    float rewardDisplayInterval;
+    RewardState rewardState;
 
 private:
     // general
@@ -75,6 +78,7 @@ private:
     // scoring
     void AddScore(std::vector<Alien>::iterator it);
     void GetMyteryshipReward();
+    void DisplayMyteryshipReward();
 };
 
 

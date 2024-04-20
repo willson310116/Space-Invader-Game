@@ -23,7 +23,6 @@ Alien::Alien(int type, Vector2 position)
             break;
         }
     }
-    
 }
 
 void Alien::Draw()

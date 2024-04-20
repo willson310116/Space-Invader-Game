@@ -3,7 +3,7 @@
 #include "button.hpp"
 #include "gamestate.hpp"
 
-extern GameScreen currentScreen;
+extern GameState curGameState;
 
 class Menu
 {

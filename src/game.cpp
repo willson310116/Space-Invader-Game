@@ -19,6 +19,23 @@ Game::Game()
     InitGame();
 }
 
+void Game::InitGame()
+{
+    obstacles = CreateObstacles(5);
+    aliens = CreateAliens(4, 10);
+    aliensDirection = 1;
+    timeLastAlienFired = 0;
+    timeLastSpawn = 0;
+    mysteryshipSpawnInterval = GetRandomValue(10, 15);
+    lives = 3;
+    run = true;
+    score = 0;
+    highScore = LoadHighScoreFromFile();
+    timeLastDisplayReward = 0;
+    rewardState = RewardState::NONE;
+    rewardDisplayInterval = 2;
+}
+
 Game::~Game()
 {
     Alien::UnloadImages();   
@@ -55,15 +72,15 @@ void Game::Update()
         }
 
         else if (optionList.IsMouseOverButton(&optionList.exitButton) &&
-            IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+                IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
-            currentScreen = GameScreen::EXIT;
+            curGameState = GameState::EXIT;
         }
         
         else if (optionList.IsMouseOverButton(&optionList.menuButton) &&
-            IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+                IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
-            currentScreen = GameScreen::MENU;
+            curGameState = GameState::MENU;
             Reset();
             InitGame();
         }
@@ -74,6 +91,7 @@ void Game::Update()
 void Game::Draw()
 {
     DrawLayout();
+    DisplayMyteryshipReward();
     spaceship.Draw();
     for (auto& laser : spaceship.lasers)
         laser.Draw();
@@ -209,11 +227,11 @@ void Game::MoveDownAliens(int distance)
 void Game::SpawnMystership()
 {
     double curTime = GetTime();
-    if (curTime - timeLastSpawn > mysteryshipSpawnInterval)
+    if (!mysteryship.alive && curTime - timeLastSpawn > mysteryshipSpawnInterval)
     {
         mysteryship.Spawn();
         timeLastSpawn = GetTime();
-        mysteryshipSpawnInterval = GetRandomValue(10, 20);
+        mysteryshipSpawnInterval = GetRandomValue(10, 15);
     }
 }
 
@@ -365,39 +383,37 @@ int Game::LoadHighScoreFromFile()
 
 void Game::DrawLayout()
 {
-    DrawRectangleRoundedLines({10, 10, 780, 780}, 0.18f, 20, 2, yellow);
-    DrawLineEx({25, 730}, {775, 730}, 3, yellow);
+    DrawRectangleRoundedLines({10, 10, 780, 780}, 0.18f, 20, 2, YELLOW);
+    DrawLineEx({25, 730}, {775, 730}, 3, YELLOW);
     
     if (run)
-        DrawTextEx(font, "LEVEL 01", {570, 740}, 34, 2, yellow);
+        DrawTextEx(font, "LEVEL 01", {570, 740}, 34, 2, YELLOW);
     else
     {
         if (aliens.size() == 0)
-            DrawTextEx(font, "YOU WON", {570, 740}, 34, 2, yellow);
+            DrawTextEx(font, "YOU WON", {570, 740}, 34, 2, YELLOW);
         else
-            DrawTextEx(font, "GAME OVER", {570, 740}, 34, 2, yellow);
+            DrawTextEx(font, "GAME OVER", {570, 740}, 34, 2, YELLOW);
     }
 
-    DrawTextEx(font, "LIVES", {70, 740}, 34, 2, yellow);
+    DrawTextEx(font, "LIVES", {70, 740}, 34, 2, YELLOW);
     float x = 180.0;
     for (int i = 0; i < lives; i++)
     {
         DrawTextureV(spaceshipImage, {x, 740}, WHITE);
         x += 50;
     }
-    DrawTextEx(font, "SCORE", {50, 15}, 36, 2, yellow);
+    DrawTextEx(font, "SCORE", {50, 15}, 36, 2, YELLOW);
     std::string scoreText = FormatWithLeadingZeros(score, 5);
-    DrawTextEx(font, scoreText.c_str(), {50, 40}, 36, 2, yellow);
+    DrawTextEx(font, scoreText.c_str(), {50, 40}, 36, 2, YELLOW);
 
-    DrawTextEx(font, "HIGH-SCORE", {570, 15}, 36, 2, yellow);
+    DrawTextEx(font, "HIGH-SCORE", {570, 15}, 36, 2, YELLOW);
     std::string highScoreText = FormatWithLeadingZeros(highScore, 5);
-    DrawTextEx(font, highScoreText.c_str(), {665, 40}, 36, 2, yellow);
-
+    DrawTextEx(font, highScoreText.c_str(), {665, 40}, 36, 2, YELLOW);
 }
 
 void Game::GameOver()
 {
-    // std::cout << "Game over" << std::endl;
     run = false;
 }
 
@@ -407,20 +423,6 @@ void Game::Reset()
     aliens.clear();
     alienLasers.clear();
     obstacles.clear();
-}
-
-void Game::InitGame()
-{
-    obstacles = CreateObstacles(5);
-    aliens = CreateAliens(4, 8);
-    aliensDirection = 1;
-    timeLastAlienFired = 0;
-    timeLastSpawn = 0;
-    mysteryshipSpawnInterval = GetRandomValue(10, 20);
-    lives = 3;
-    run = true;
-    score = 0;
-    highScore = LoadHighScoreFromFile();
 }
 
 void Game::AddScore(std::vector<Alien>::iterator it)
@@ -436,6 +438,62 @@ void Game::AddScore(std::vector<Alien>::iterator it)
 void Game::GetMyteryshipReward()
 {
     // TODO: add randomize reward
-    // GetRandomValue(1, 5)
-    score += 500;
+    int rewardNum = GetRandomValue(1, 5);
+    timeLastDisplayReward = GetTime();
+    switch (rewardNum)
+    {
+    case 1:
+        score += 500;
+        rewardState = RewardState::ADD_SCORE;
+        break;
+    case 2:
+        spaceship.speed.x += 2;
+        rewardState = RewardState::ADD_MOVE;
+        break;
+    case 3:
+        lives += 1;
+        rewardState = RewardState::ADD_LIVE;
+        break;
+    case 4:
+        spaceship.fireInterval /= 2;
+        rewardState = RewardState::ADD_LASER;
+        break;
+    case 5:
+        spaceship.laserSpeed -= 2;
+        rewardState = RewardState::ADD_LASER_SPEED;
+        break;
+    default:
+        break;
+    }
+    
+}
+
+void Game::DisplayMyteryshipReward()
+{
+    double curTime = GetTime();
+    if (curTime - timeLastDisplayReward <= rewardDisplayInterval)
+    {
+        switch (rewardState)
+        {
+        case RewardState::NONE:
+            break;
+        case RewardState::ADD_SCORE:
+            DrawTextEx(font, "POINT + 500", {200, 15}, 36 , 2, GREEN);
+            break;
+        case RewardState::ADD_MOVE:
+            DrawTextEx(font, "FASTER MOVE", {200, 15}, 36, 2, GREEN);
+            break;
+        case RewardState::ADD_LIVE:
+            DrawTextEx(font, "LIVE + 1", {200, 15}, 36, 2, GREEN);
+            break;
+        case RewardState::ADD_LASER:
+            DrawTextEx(font, "MORE LASER", {200, 15}, 36, 2, GREEN);
+            break;
+        case RewardState::ADD_LASER_SPEED:
+            DrawTextEx(font, "FASTER LASER", {200, 15}, 36, 2, GREEN);
+            break;
+        default:
+            break;
+        }
+    }
 }

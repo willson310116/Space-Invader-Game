@@ -35,9 +35,9 @@ void Menu::Update()
     handleButton(&startButton);
     handleButton(&exitButton);
     if (IsMouseOverButton(&startButton) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-        currentScreen = GameScreen::GAMEPLAY;
+        curGameState = GameState::GAMEPLAY;
     if (IsMouseOverButton(&exitButton) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-        currentScreen = GameScreen::EXIT;
+        curGameState = GameState::EXIT;
 }
 
 void Menu::Draw()

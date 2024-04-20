@@ -1,8 +1,9 @@
 #include <raylib.h>
 #include "game.hpp"
 
-GameScreen currentScreen = GameScreen::MENU;
+GameState curGameState = GameState::MENU;
 
+// TODO: add configuration
 int main()
 {
     int windowWidth = 750;
@@ -17,18 +18,18 @@ int main()
     // create instance after window initialization
     Game game;
     
-    while (WindowShouldClose() == false && currentScreen != GameScreen::EXIT)
+    while (WindowShouldClose() == false && curGameState != GameState::EXIT)
     {
         BeginDrawing();
         ClearBackground(grey);
-        switch (currentScreen)
+        switch (curGameState)
         {
-        case GameScreen::MENU:
+        case GameState::MENU:
             game.menu.Update();
             game.menu.Draw();
             break;
 
-        case GameScreen::GAMEPLAY:
+        case GameState::GAMEPLAY:
             UpdateMusicStream(game.music);
             game.HandleInput();
             game.Update();

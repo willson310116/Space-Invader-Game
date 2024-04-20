@@ -19,12 +19,15 @@ public:
     void Reset();
 
     std::vector<Laser> lasers;
+    Vector2 speed;
+    float fireInterval = 0.5;
+    int laserSpeed;
 
 private:
     Texture2D image;
     Vector2 position;
-    Vector2 speed;
+    
     double lastFireTime;
     Sound laserSound;
-    constexpr static float fireInterval = 0.5;
+    
 };

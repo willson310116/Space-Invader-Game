@@ -3,7 +3,7 @@
 #include "button.hpp"
 #include "gamestate.hpp"
 
-extern GameScreen currentScreen;
+extern GameState curGameState;
 
 // TODO: use ploymorphism to replace this and menu class
 class OptionList

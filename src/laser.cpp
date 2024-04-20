@@ -5,10 +5,8 @@ Laser::Laser(Vector2 position, int speed, int type) :
     position(position), speed(speed), active(true)
 {
     // spaceship
-    if (type == 1)
-        color = {243, 216, 63, 255};
-    else
-        color = {240, 68, 51, 255};
+    if (type == 1) color = YELLOW;
+    else color = RED;
 }
 
 Laser::~Laser()
