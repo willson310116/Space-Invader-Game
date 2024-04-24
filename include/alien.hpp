@@ -1,10 +1,11 @@
 #pragma once
 #include <raylib.h>
+#include <yaml-cpp/yaml.h>
 
 class Alien
 {
 public:
-    Alien(int type, Vector2 position);
+    Alien(YAML::Node& config, int type, Vector2 position);
     void Draw();
     void Update(int direction);
     int GetType();

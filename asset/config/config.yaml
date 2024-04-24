@@ -1,0 +1,43 @@
+General:
+  WindowWidth: 750
+  WindowHeight: 700
+  WindowOffset: 50
+
+Game:
+  General:
+    Lives: 3
+    RewardDisplayInterval: 2
+    MusicVolume: 0.25
+  Obstacle:
+    NumObstacles: 5 
+  Alien:
+    AlienRows: 4
+    AlienCols: 10
+    AlienSpeed: 1
+    AlienDropDistance: 6
+    FireInterval: 0.5
+  MysteryShip:
+    MysteryshipSpawnIntervalLowerBound: 10
+    MysteryshipSpawnIntervalUpperBound: 15
+    Speed: 3
+  Laser:
+    AlienLaserSpeed: 6
+    SpaceshipLaserSpeed: -6
+  SpaceShip:
+    Speed: 5
+    FireInterval: 0.5
+
+Path:
+  RelativePath: ../
+  BackgroundMusic: ../asset/sounds/golden_wind.mp3
+  ExplosionSound: ../asset/sounds/explosion.ogg
+  LaserSound: ../asset/sounds/laser.ogg
+  Alien_1_Img: ../asset/graphics/alien_1.png
+  Alien_2_Img: ../asset/graphics/alien_2.png
+  Alien_3_Img: ../asset/graphics/alien_3.png
+  MysteryShipImg: ../asset/graphics/mystery.png
+  SpaceShipImg: ../asset/graphics/spaceship.png
+  Font: ../asset/font/monogram.ttf
+  HighScore: ./highscore.txt
+
+

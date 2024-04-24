@@ -1,4 +1,5 @@
 #pragma once
+#include <yaml-cpp/yaml.h>
 #include <raylib.h>
 #include <vector>
 #include "Laser.hpp"
@@ -6,7 +7,8 @@
 class SpaceShip
 {
 public:
-    SpaceShip();
+    SpaceShip() = default;
+    SpaceShip(YAML::Node& config);
     ~SpaceShip();
     void Draw();
     void Update();
@@ -24,6 +26,7 @@ public:
     int laserSpeed;
 
 private:
+    YAML::Node config;
     Texture2D image;
     Vector2 position;
     

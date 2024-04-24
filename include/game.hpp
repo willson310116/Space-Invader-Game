@@ -1,4 +1,5 @@
 #pragma once
+#include <yaml-cpp/yaml.h>
 #include "MainMenu.hpp"
 #include "Alien.hpp"
 #include "Obstacle.hpp"
@@ -12,7 +13,7 @@ extern GameState curGameState;
 class Game
 {
 public:
-    Game();
+    Game(YAML::Node& config);
     ~Game();
 
     void Draw();
@@ -21,30 +22,52 @@ public:
 
     bool run;       // whether game is currently running
     int lives;      // player's live
+    int initLives;
     int score;      // player's score
     int highScore;  // history high score
+    Color backgroundColor = {29, 29, 29, 255};
     Music music;
     
     MainMenu mainMenu;
     OptionList optionList;
     
-    Font font = LoadFontEx("../asset/font/monogram.ttf", 64, 0, 0);
-    Texture2D spaceshipImage = LoadTexture("../asset/graphics/spaceship.png");
+    Font font;
+    Texture2D spaceshipImage;
 
 private:
+    // params
+    YAML::Node config;
+    std::string backgroundMusicPath;
+    std::string explosionSoundPath;
+    std::string fontPath;
+    std::string spaceshipImgPath;
+    std::string highScoreFile;
+    float musicVolume;
+    int numObstacles;
+    
     SpaceShip spaceship;
+    int spaceshipLaserSpeed;
+    int spaceshipSpeed;
+    float spaceshipFireInterval;
     std::vector<Obstacle> obstacles;
     
     // aliens
-    int aliensDirection;
+    int alienSpeed;
+    int alienRows;
+    int alienCols;
+    int alienLaserSpeed;
+    int alienDropDistance;
     std::vector<Alien> aliens;
     std::vector<Laser> alienLasers;
     float timeLastAlienFired;
-    constexpr static float alienFireInterval = 0.5;
+    float alienFireInterval;
     
     // mysteryship
     MysteryShip mysteryship;
     float timeLastSpawn;
+    int mysteryshipSpawnIntervalLowerBound;
+    int mysteryshipSpawnIntervalUpperBound;
+    int mysteryshipsSpeed;
     float mysteryshipSpawnInterval;
     float timeLastDisplayReward;
     float rewardDisplayInterval;
@@ -53,6 +76,7 @@ private:
 private:
     // general
     void InitGame();
+    void SetParams();
     void Reset();
     void GameOver();
     void DeleteInactiveLaser();

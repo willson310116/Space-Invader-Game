@@ -1,3 +1,5 @@
 build/*
 .vscode/*
 .DS_Store
+asset/config/test.yaml
+asset/config/parse.cpp

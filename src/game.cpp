@@ -11,30 +11,62 @@ std::string FormatWithLeadingZeros(int number, int width)
     return std::string(leadingZeros, '0') + numberText;
 }
 
-Game::Game()
+void Game::SetParams()
 {
-    music = LoadMusicStream("../asset/sounds/golden_wind.mp3");
-    explosionSound = LoadSound("../asset/sounds/explosion.ogg");
+    backgroundMusicPath = config["Path"]["BackgroundMusic"].as<std::string>();
+    explosionSoundPath = config["Path"]["ExplosionSound"].as<std::string>();
+    fontPath = config["Path"]["Font"].as<std::string>();
+    spaceshipImgPath = config["Path"]["SpaceShipImg"].as<std::string>();
+    highScoreFile = config["Path"]["HighScore"].as<std::string>();
+
+    musicVolume = config["Game"]["General"]["MusicVolume"].as<float>();
+    initLives = config["Game"]["General"]["Lives"].as<int>();
+    rewardDisplayInterval = config["Game"]["General"]["RewardDisplayInterval"].as<float>();
+    
+    numObstacles = config["Game"]["Obstacle"]["NumObstacles"].as<int>();
+
+    alienRows = config["Game"]["Alien"]["AlienRows"].as<int>();
+    alienCols = config["Game"]["Alien"]["AlienCols"].as<int>();
+    alienSpeed = config["Game"]["Alien"]["AlienSpeed"].as<int>();
+    alienDropDistance = config["Game"]["Alien"]["AlienDropDistance"].as<int>();
+    alienFireInterval = config["Game"]["Alien"]["FireInterval"].as<float>();
+    
+    mysteryshipSpawnIntervalLowerBound = config["Game"]["MysteryShip"]["MysteryshipSpawnIntervalLowerBound"].as<int>();
+    mysteryshipSpawnIntervalUpperBound = config["Game"]["MysteryShip"]["MysteryshipSpawnIntervalUpperBound"].as<int>();
+  
+    alienLaserSpeed = config["Game"]["Laser"]["AlienLaserSpeed"].as<int>();
+    spaceshipLaserSpeed = config["Game"]["Laser"]["SpaceshipLaserSpeed"].as<int>();
+  
+    spaceshipFireInterval = config["Game"]["SpaceShip"]["FireInterval"].as<float>();
+}
+
+Game::Game(YAML::Node& config) : config(config), spaceship(config), mysteryship(config)
+{
+    SetParams();
+    music = LoadMusicStream(backgroundMusicPath.c_str());
+    explosionSound = LoadSound(explosionSoundPath.c_str());
     PlayMusicStream(music);
-    SetMusicVolume(music, 0.25);
+    SetMusicVolume(music, musicVolume);
+    font = LoadFontEx(fontPath.c_str(), 64, 0, 0);
+    spaceshipImage = LoadTexture(spaceshipImgPath.c_str());
     InitGame();
 }
 
 void Game::InitGame()
 {
-    obstacles = CreateObstacles(5);
-    aliens = CreateAliens(4, 10);
-    aliensDirection = 1;
+    obstacles = CreateObstacles(numObstacles);
+    aliens = CreateAliens(alienRows, alienCols);
     timeLastAlienFired = 0;
     timeLastSpawn = 0;
-    mysteryshipSpawnInterval = GetRandomValue(10, 15);
-    lives = 3;
+    mysteryshipSpawnInterval = GetRandomValue(
+        mysteryshipSpawnIntervalLowerBound, mysteryshipSpawnIntervalUpperBound);
+
     run = true;
     score = 0;
     highScore = LoadHighScoreFromFile();
     timeLastDisplayReward = 0;
     rewardState = RewardState::NONE;
-    rewardDisplayInterval = 2;
+    lives = initLives;
 }
 
 Game::~Game()
@@ -195,7 +227,7 @@ std::vector<Alien> Game::CreateAliens(int row, int col)
 
             float x = offsetX + j * gapBetweenAliens;
             float y = offsetY + i * gapBetweenAliens;
-            aliens.push_back(Alien(alienType, {x, y}));
+            aliens.push_back(Alien(config, alienType, {x, y}));
         }
     }
     return aliens;
@@ -207,17 +239,19 @@ void Game::MoveAliens()
     {
         if (alien.position.x + alien.alienImages[alien.type - 1].width > GetScreenWidth() - 25)
         {
-            aliensDirection = -1;
-            MoveDownAliens(6);
+            if (alienSpeed > 0)
+                alienSpeed *= -1;
+            MoveDownAliens(alienDropDistance);
         }
             
         else if (alien.position.x < 25)
         {
-            aliensDirection = 1;
-            MoveDownAliens(6);
+            if (alienSpeed < 0)
+                alienSpeed *= -1;
+            MoveDownAliens(alienDropDistance);
         }
             
-        alien.Update(aliensDirection);
+        alien.Update(alienSpeed);
     }
 }
 
@@ -374,7 +408,7 @@ void Game::SaveHighScoreToFile(int score)
 int Game::LoadHighScoreFromFile()
 {
     int loadedScore = 0;
-    std::ifstream file("highscore.txt");
+    std::ifstream file(highScoreFile);
     if (file.is_open())
     {
         file >> loadedScore;

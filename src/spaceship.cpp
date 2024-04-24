@@ -1,15 +1,15 @@
 #include "SpaceShip.hpp"
 
-SpaceShip::SpaceShip()
+SpaceShip::SpaceShip(YAML::Node& config)
 {
-    image = LoadTexture("../asset/graphics/spaceship.png");
+    image = LoadTexture(config["Path"]["SpaceShipImg"].as<std::string>().c_str());
     position.x = (GetScreenWidth() - image.width) / 2;
     position.y = GetScreenHeight() - image.height - 100;
-    speed.x = 5;
+    speed.x = config["Game"]["SpaceShip"]["Speed"].as<int>();;
     speed.y = 5;
     lastFireTime = 0.0;
-    laserSound = LoadSound("../asset/sounds/laser.ogg");
-    laserSpeed = -6;
+    laserSound = LoadSound(config["Path"]["LaserSound"].as<std::string>().c_str());
+    laserSpeed = config["Game"]["Laser"]["SpaceshipLaserSpeed"].as<int>();;
 }
 
 SpaceShip::~SpaceShip()
@@ -81,8 +81,5 @@ void SpaceShip::Reset()
 {
     position.x = (GetScreenWidth() - image.width) / 2;
     position.y = GetScreenHeight() - image.height - 100;
-    // speed.x = 7;
-    // speed.y = 7;
-    // lastFireTime = 0.0;
     lasers.clear();
 }

@@ -2,7 +2,7 @@
 
 Texture2D Alien::alienImages[3] = {};
 
-Alien::Alien(int type, Vector2 position)
+Alien::Alien(YAML::Node& config, int type, Vector2 position)
     : type(type), position(position)
 {
     if (alienImages[type - 1].id == 0)
@@ -10,16 +10,16 @@ Alien::Alien(int type, Vector2 position)
         switch (type)
         {
         case 1:
-            alienImages[0] = LoadTexture("../asset/graphics/alien_1.png");
+            alienImages[0] = LoadTexture(config["Path"]["Alien_1_Img"].as<std::string>().c_str());
             break;
         case 2:
-            alienImages[1] = LoadTexture("../asset/graphics/alien_2.png");
+            alienImages[1] = LoadTexture(config["Path"]["Alien_2_Img"].as<std::string>().c_str());
             break;
         case 3:
-            alienImages[2] = LoadTexture("../asset/graphics/alien_3.png");
+            alienImages[2] = LoadTexture(config["Path"]["Alien_3_Img"].as<std::string>().c_str());
             break;
         default:
-            alienImages[0] = LoadTexture("../asset/graphics/alien_1.png");
+            alienImages[0] = LoadTexture(config["Path"]["Alien_1_Img"].as<std::string>().c_str());
             break;
         }
     }

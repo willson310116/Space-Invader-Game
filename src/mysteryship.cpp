@@ -1,9 +1,11 @@
 #include "MysteryShip.hpp"
+#include <iostream>
 
-MysteryShip::MysteryShip()
+MysteryShip::MysteryShip(YAML::Node& config)
 {
-    image = LoadTexture("../asset/graphics/mystery.png");
+    image = LoadTexture(config["Path"]["MysteryShipImg"].as<std::string>().c_str());
     alive = false;
+    speed = config["Game"]["MysteryShip"]["Speed"].as<int>();
 }
 
 MysteryShip::~MysteryShip()
@@ -19,12 +21,11 @@ void MysteryShip::Spawn()
     if (side == 0)
     {
         position.x = 25;
-        speed = 3;
     }
     else
     {
         position.x = GetScreenWidth() - image.width - 25;
-        speed = -3;
+        speed *= -1;
     }
     alive = true;
 }
