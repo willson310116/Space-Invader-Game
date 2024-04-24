@@ -9,7 +9,7 @@ Game:
     RewardDisplayInterval: 2
     MusicVolume: 0.25
   Obstacle:
-    NumObstacles: 5 
+    NumObstacles: 4
   Alien:
     AlienRows: 4
     AlienCols: 10
@@ -17,18 +17,17 @@ Game:
     AlienDropDistance: 6
     FireInterval: 0.5
   MysteryShip:
-    MysteryshipSpawnIntervalLowerBound: 10
-    MysteryshipSpawnIntervalUpperBound: 15
+    MysteryshipSpawnIntervalLowerBound: 5
+    MysteryshipSpawnIntervalUpperBound: 10
     Speed: 3
   Laser:
     AlienLaserSpeed: 6
     SpaceshipLaserSpeed: -6
   SpaceShip:
-    Speed: 5
+    Speed: 6
     FireInterval: 0.5
 
 Path:
-  RelativePath: ../
   BackgroundMusic: ../asset/sounds/golden_wind.mp3
   ExplosionSound: ../asset/sounds/explosion.ogg
   LaserSound: ../asset/sounds/laser.ogg

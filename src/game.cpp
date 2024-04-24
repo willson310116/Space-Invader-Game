@@ -13,31 +13,34 @@ std::string FormatWithLeadingZeros(int number, int width)
 
 void Game::SetParams()
 {
+    // path
     backgroundMusicPath = config["Path"]["BackgroundMusic"].as<std::string>();
     explosionSoundPath = config["Path"]["ExplosionSound"].as<std::string>();
     fontPath = config["Path"]["Font"].as<std::string>();
     spaceshipImgPath = config["Path"]["SpaceShipImg"].as<std::string>();
     highScoreFile = config["Path"]["HighScore"].as<std::string>();
 
+    // general
     musicVolume = config["Game"]["General"]["MusicVolume"].as<float>();
     initLives = config["Game"]["General"]["Lives"].as<int>();
     rewardDisplayInterval = config["Game"]["General"]["RewardDisplayInterval"].as<float>();
     
+    // obstacle
     numObstacles = config["Game"]["Obstacle"]["NumObstacles"].as<int>();
 
+    // alien
     alienRows = config["Game"]["Alien"]["AlienRows"].as<int>();
     alienCols = config["Game"]["Alien"]["AlienCols"].as<int>();
     alienSpeed = config["Game"]["Alien"]["AlienSpeed"].as<int>();
     alienDropDistance = config["Game"]["Alien"]["AlienDropDistance"].as<int>();
     alienFireInterval = config["Game"]["Alien"]["FireInterval"].as<float>();
     
+    // mysteryship
     mysteryshipSpawnIntervalLowerBound = config["Game"]["MysteryShip"]["MysteryshipSpawnIntervalLowerBound"].as<int>();
     mysteryshipSpawnIntervalUpperBound = config["Game"]["MysteryShip"]["MysteryshipSpawnIntervalUpperBound"].as<int>();
   
+    // alien
     alienLaserSpeed = config["Game"]["Laser"]["AlienLaserSpeed"].as<int>();
-    spaceshipLaserSpeed = config["Game"]["Laser"]["SpaceshipLaserSpeed"].as<int>();
-  
-    spaceshipFireInterval = config["Game"]["SpaceShip"]["FireInterval"].as<float>();
 }
 
 Game::Game(YAML::Node& config) : config(config), spaceship(config), mysteryship(config)
@@ -200,9 +203,8 @@ std::vector<Obstacle> Game::CreateObstacles(int numObstacles)
     for (int i = 0; i < numObstacles; i++)
     {
         float offsetX = (i + 1) * gapBetweenObstacles + i * obstacleWidth;
-        // obstacles.push_back(
-        //     Obstacle({offsetX, static_cast<float>(GetScreenHeight() - 100)}));
-        obstacles.emplace_back(Vector2{offsetX, static_cast<float>(GetScreenHeight() - 200)});
+        obstacles.emplace_back(
+            Vector2{offsetX, static_cast<float>(GetScreenHeight() - 200)});
     }
     return obstacles;
 }
@@ -227,7 +229,7 @@ std::vector<Alien> Game::CreateAliens(int row, int col)
 
             float x = offsetX + j * gapBetweenAliens;
             float y = offsetY + i * gapBetweenAliens;
-            aliens.push_back(Alien(config, alienType, {x, y}));
+            aliens.emplace_back(config, alienType, Vector2{x, y});
         }
     }
     return aliens;
@@ -270,7 +272,8 @@ void Game::SpawnMystership()
     {
         mysteryship.Spawn();
         timeLastSpawn = GetTime();
-        mysteryshipSpawnInterval = GetRandomValue(10, 15);
+        mysteryshipSpawnInterval = GetRandomValue(
+            mysteryshipSpawnIntervalLowerBound, mysteryshipSpawnIntervalUpperBound);
     }
 }
 
@@ -282,10 +285,10 @@ void Game::AlienFire()
         int randomIndex = GetRandomValue(0, aliens.size() - 1);
         Alien& alien = aliens[randomIndex];
         
-        alienLasers.push_back(
-            Laser({alien.position.x + alien.alienImages[alien.type - 1].width / 2,
-                alien.position.y + alien.alienImages[alien.type - 1].height}, 6, 2)
-        );
+        alienLasers.emplace_back(
+            Vector2{alien.position.x + alien.alienImages[alien.type - 1].width / 2,
+                alien.position.y + alien.alienImages[alien.type - 1].height}, alienLaserSpeed, 2);
+        
         timeLastAlienFired = GetTime();
     }
 }
@@ -341,7 +344,6 @@ void Game::CheckCollisions()
         if (CheckCollisionRecs(laser.GetRect(), spaceship.GetRect()))
         {
             laser.active = false;
-            // std::cout << "Spaceship hit" << std::endl;
             lives -= 1;
             if (lives == 0)
                 GameOver();
@@ -379,7 +381,6 @@ void Game::CheckCollisions()
         }
         if (CheckCollisionRecs(alien.GetRect(), spaceship.GetRect()))
         {
-            // std::cout << "Spaceship get hit by alien" << std::endl;
             GameOver();
         }
             

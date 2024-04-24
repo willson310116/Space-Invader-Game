@@ -46,9 +46,6 @@ private:
     int numObstacles;
     
     SpaceShip spaceship;
-    int spaceshipLaserSpeed;
-    int spaceshipSpeed;
-    float spaceshipFireInterval;
     std::vector<Obstacle> obstacles;
     
     // aliens

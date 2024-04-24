@@ -8,7 +8,7 @@ MainMenu::MainMenu()
 void MainMenu::Init()
 {
     for (int i = 0; i < NUM_BUTTONS; i++)
-        buttons.push_back(Button());
+        buttons.emplace_back();
 
     ButtonHandler::InitButton(&buttons[START], (Rectangle){static_cast<float>((GetScreenWidth()-400)/2), 300, 400, 150}, ORANGE);
     ButtonHandler::InitButton(&buttons[EXIT], (Rectangle){static_cast<float>((GetScreenWidth()-400)/2), 500, 400, 150}, ORANGE);

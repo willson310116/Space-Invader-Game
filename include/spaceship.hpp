@@ -22,7 +22,7 @@ public:
 
     std::vector<Laser> lasers;
     Vector2 speed;
-    float fireInterval = 0.5;
+    float fireInterval;
     int laserSpeed;
 
 private:

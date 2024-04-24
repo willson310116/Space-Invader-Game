@@ -7,6 +7,7 @@ SpaceShip::SpaceShip(YAML::Node& config)
     position.y = GetScreenHeight() - image.height - 100;
     speed.x = config["Game"]["SpaceShip"]["Speed"].as<int>();;
     speed.y = 5;
+    fireInterval = config["Game"]["SpaceShip"]["FireInterval"].as<float>();
     lastFireTime = 0.0;
     laserSound = LoadSound(config["Path"]["LaserSound"].as<std::string>().c_str());
     laserSpeed = config["Game"]["Laser"]["SpaceshipLaserSpeed"].as<int>();;
@@ -63,8 +64,6 @@ void SpaceShip::Fire()
     if (GetTime() - lastFireTime >= fireInterval)
     {
         // the laser has 4 pixel of width, so minus 2 to centerize
-        // lasers.push_back(
-        //     Laser({position.x + image.width/2 - 2, position.y}, -6));
         lasers.emplace_back(
             Vector2{position.x + image.width/2 - 2, position.y}, laserSpeed, 1);
         lastFireTime = GetTime();

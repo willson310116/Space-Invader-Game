@@ -4,16 +4,14 @@
 
 GameState curGameState = GameState::MENU;
 
-// TODO: add configuration
+// TODO: make more levels
 int main() {
     // Load the YAML file
     YAML::Node config = YAML::LoadFile("../asset/config/config.yaml");
     int windowWidth = config["General"]["WindowWidth"].as<int>();
     int windowHeight = config["General"]["WindowHeight"].as<int>();
     int windowOffset = config["General"]["WindowOffset"].as<int>();
-    int speed;
-    speed = config["Game"]["MysteryShip"]["Speed"].as<int>();
-    std::cout << "speed: " << speed << std::endl;
+    
     InitWindow(windowWidth + windowOffset, windowHeight + 2 * windowOffset, "C++ space invader");
     InitAudioDevice();
     SetTargetFPS(60);

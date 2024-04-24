@@ -5,7 +5,6 @@
 #include "GameState.hpp"
 #include "ButtonHandler.hpp"
 
-// TODO: use ploymorphism to replace this and menu class
 class OptionList : public Menu
 {
 public:

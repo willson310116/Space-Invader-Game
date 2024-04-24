@@ -8,7 +8,7 @@ OptionList::OptionList()
 void OptionList::Init()
 {
     for (int i = 0; i < NUM_BUTTONS; i++)
-        buttons.push_back(Button());
+        buttons.emplace_back();
     ButtonHandler::InitButton(&buttons[START], (Rectangle){static_cast<float>((GetScreenWidth()-300)/2), 150, 300, 100}, ORANGE);
     ButtonHandler::InitButton(&buttons[MENU], (Rectangle){static_cast<float>((GetScreenWidth()-300)/2), 300, 300, 100}, ORANGE);
     ButtonHandler::InitButton(&buttons[EXIT], (Rectangle){static_cast<float>((GetScreenWidth()-300)/2), 450, 300, 100}, ORANGE);
