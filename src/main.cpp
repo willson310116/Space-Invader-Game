@@ -3,8 +3,8 @@
 #include "Game.hpp"
 
 GameState curGameState = GameState::MENU;
+bool loadFlag = false;
 
-// TODO: make more levels
 int main() {
     // Load the YAML file
     YAML::Node config = YAML::LoadFile("../asset/config/config.yaml");
@@ -32,6 +32,7 @@ int main() {
 
         case GameState::GAMEPLAY:
             UpdateMusicStream(game.music);
+            game.SetGame();
             game.HandleInput();
             game.Update();
             game.Draw();

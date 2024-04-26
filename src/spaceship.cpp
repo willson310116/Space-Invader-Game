@@ -1,17 +1,23 @@
 #include "SpaceShip.hpp"
 
-SpaceShip::SpaceShip(YAML::Node& config)
+SpaceShip::SpaceShip(YAML::Node& config) : config(config)
 {
     image = LoadTexture(config["Path"]["SpaceShipImg"].as<std::string>().c_str());
+    laserSound = LoadSound(config["Path"]["LaserSound"].as<std::string>().c_str());
+    loadConfig();
+}
+
+void SpaceShip::loadConfig()
+{
     position.x = (GetScreenWidth() - image.width) / 2;
     position.y = GetScreenHeight() - image.height - 100;
     speed.x = config["Game"]["SpaceShip"]["Speed"].as<int>();;
     speed.y = 5;
     fireInterval = config["Game"]["SpaceShip"]["FireInterval"].as<float>();
     lastFireTime = 0.0;
-    laserSound = LoadSound(config["Path"]["LaserSound"].as<std::string>().c_str());
     laserSpeed = config["Game"]["Laser"]["SpaceshipLaserSpeed"].as<int>();;
 }
+
 
 SpaceShip::~SpaceShip()
 {
@@ -78,7 +84,7 @@ Rectangle SpaceShip::GetRect()
 
 void SpaceShip::Reset()
 {
-    position.x = (GetScreenWidth() - image.width) / 2;
-    position.y = GetScreenHeight() - image.height - 100;
+    loadConfig();
     lasers.clear();
 }
+

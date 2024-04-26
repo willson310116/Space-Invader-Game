@@ -14,7 +14,7 @@ public:
     void Draw() override;
     enum ButtonIndex
     {
-        START = 0,
+        RESTART = 0,
         MENU,
         EXIT,
         NUM_BUTTONS,

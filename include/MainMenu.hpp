@@ -5,6 +5,7 @@
 #include "ButtonHandler.hpp"
 
 extern GameState curGameState;
+extern bool loadFlag;
 
 class MainMenu : public Menu
 {
@@ -16,7 +17,13 @@ public:
     enum ButtonIndex
     {
         START = 0,
+        LEVEL,
+        PLUS_LEVEL,
+        MINUS_LEVEL,
         EXIT,
         NUM_BUTTONS,
     };
+public:
+    int level;
+    // bool loadFlag;
 };

@@ -8,24 +8,62 @@ Game:
     Lives: 3
     RewardDisplayInterval: 2
     MusicVolume: 0.25
-  Obstacle:
-    NumObstacles: 4
-  Alien:
-    AlienRows: 4
-    AlienCols: 10
-    AlienSpeed: 1
-    AlienDropDistance: 6
-    FireInterval: 0.5
-  MysteryShip:
-    MysteryshipSpawnIntervalLowerBound: 5
-    MysteryshipSpawnIntervalUpperBound: 10
-    Speed: 3
-  Laser:
-    AlienLaserSpeed: 6
-    SpaceshipLaserSpeed: -6
   SpaceShip:
     Speed: 6
     FireInterval: 0.5
+  MysteryShip:
+    Speed: 3
+  Laser:
+      SpaceshipLaserSpeed: -6
+  
+  LEVEL1:
+    Obstacle:
+      NumObstacles: 5
+    Alien:
+      AlienRows: 3
+      AlienCols: 5
+      AlienSpeed: 1
+      AlienDropDistance: 6
+      FireInterval: 0.5
+    MysteryShip:
+      MysteryshipSpawnIntervalLowerBound: 5
+      MysteryshipSpawnIntervalUpperBound: 10
+      Speed: 3
+    Laser:
+      AlienLaserSpeed: 6
+  
+  LEVEL2:
+    Obstacle:
+      NumObstacles: 4
+    Alien:
+      AlienRows: 4
+      AlienCols: 10
+      AlienSpeed: 2
+      AlienDropDistance: 6
+      FireInterval: 0.4
+    MysteryShip:
+      MysteryshipSpawnIntervalLowerBound: 5
+      MysteryshipSpawnIntervalUpperBound: 10
+      Speed: 3
+    Laser:
+      AlienLaserSpeed: 6
+  
+  LEVEL3:
+    Obstacle:
+      NumObstacles: 3
+    Alien:
+      AlienRows: 6
+      AlienCols: 10
+      AlienSpeed: 2
+      AlienDropDistance: 8
+      FireInterval: 0.4
+    MysteryShip:
+      MysteryshipSpawnIntervalLowerBound: 5
+      MysteryshipSpawnIntervalUpperBound: 10
+      Speed: 3
+    Laser:
+      AlienLaserSpeed: 7
+      
 
 Path:
   BackgroundMusic: ../asset/sounds/golden_wind.mp3

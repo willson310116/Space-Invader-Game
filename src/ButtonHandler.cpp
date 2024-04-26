@@ -11,12 +11,12 @@ bool ButtonHandler::IsMouseOverButton(Button *button)
     return CheckCollisionPointRec(GetMousePosition(), button->rect);
 }
 
-void ButtonHandler::HandleButton(Button *button)
+void ButtonHandler::HandleButton(Button *button, Color offColor, Color onColor)
 {
     if (IsMouseOverButton(button))
-        button->color = BLUE;
+        button->color = onColor;
     else
-        button->color = ORANGE;
+        button->color = offColor;
 }
 
 void ButtonHandler::DrawButton(Button *button, const char *text)

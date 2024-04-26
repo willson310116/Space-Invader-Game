@@ -14,33 +14,47 @@ std::string FormatWithLeadingZeros(int number, int width)
 void Game::SetParams()
 {
     // path
-    backgroundMusicPath = config["Path"]["BackgroundMusic"].as<std::string>();
-    explosionSoundPath = config["Path"]["ExplosionSound"].as<std::string>();
-    fontPath = config["Path"]["Font"].as<std::string>();
-    spaceshipImgPath = config["Path"]["SpaceShipImg"].as<std::string>();
-    highScoreFile = config["Path"]["HighScore"].as<std::string>();
+    YAML::Node node = config["Path"];
+    backgroundMusicPath = node["BackgroundMusic"].as<std::string>();
+    explosionSoundPath = node["ExplosionSound"].as<std::string>();
+    fontPath = node["Font"].as<std::string>();
+    spaceshipImgPath = node["SpaceShipImg"].as<std::string>();
+    highScoreFile = node["HighScore"].as<std::string>();
 
     // general
-    musicVolume = config["Game"]["General"]["MusicVolume"].as<float>();
-    initLives = config["Game"]["General"]["Lives"].as<int>();
-    rewardDisplayInterval = config["Game"]["General"]["RewardDisplayInterval"].as<float>();
+    // YAML::Node is ref type
+    YAML::Node node1 = config["Game"]["General"];
+    musicVolume = node1["MusicVolume"].as<float>();
+    initLives = node1["Lives"].as<int>();
+    rewardDisplayInterval = node1["RewardDisplayInterval"].as<float>();
+}
+
+void Game::LoadLevelConfig()
+{
+    std::string curLevel = "LEVEL" + std::to_string(mainMenu.level);
+    YAML::Node node = config["Game"][curLevel];
     
     // obstacle
-    numObstacles = config["Game"]["Obstacle"]["NumObstacles"].as<int>();
+    numObstacles = node["Obstacle"]["NumObstacles"].as<int>();
 
     // alien
-    alienRows = config["Game"]["Alien"]["AlienRows"].as<int>();
-    alienCols = config["Game"]["Alien"]["AlienCols"].as<int>();
-    alienSpeed = config["Game"]["Alien"]["AlienSpeed"].as<int>();
-    alienDropDistance = config["Game"]["Alien"]["AlienDropDistance"].as<int>();
-    alienFireInterval = config["Game"]["Alien"]["FireInterval"].as<float>();
+    alienRows = node["Alien"]["AlienRows"].as<int>();
+    alienCols = node["Alien"]["AlienCols"].as<int>();
+    alienSpeed = node["Alien"]["AlienSpeed"].as<int>();
+    alienDropDistance = node["Alien"]["AlienDropDistance"].as<int>();
+    alienFireInterval = node["Alien"]["FireInterval"].as<float>();
     
     // mysteryship
-    mysteryshipSpawnIntervalLowerBound = config["Game"]["MysteryShip"]["MysteryshipSpawnIntervalLowerBound"].as<int>();
-    mysteryshipSpawnIntervalUpperBound = config["Game"]["MysteryShip"]["MysteryshipSpawnIntervalUpperBound"].as<int>();
+    mysteryshipSpawnIntervalLowerBound = node["MysteryShip"]["MysteryshipSpawnIntervalLowerBound"].as<int>();
+    mysteryshipSpawnIntervalUpperBound = node["MysteryShip"]["MysteryshipSpawnIntervalUpperBound"].as<int>();
   
     // alien
-    alienLaserSpeed = config["Game"]["Laser"]["AlienLaserSpeed"].as<int>();
+    alienLaserSpeed = node["Laser"]["AlienLaserSpeed"].as<int>();
+}
+
+void Game::Debugger(const char* text)
+{
+    std::cout << text << std::endl;
 }
 
 Game::Game(YAML::Node& config) : config(config), spaceship(config), mysteryship(config)
@@ -52,7 +66,16 @@ Game::Game(YAML::Node& config) : config(config), spaceship(config), mysteryship(
     SetMusicVolume(music, musicVolume);
     font = LoadFontEx(fontPath.c_str(), 64, 0, 0);
     spaceshipImage = LoadTexture(spaceshipImgPath.c_str());
-    InitGame();
+}
+
+void Game::SetGame()
+{
+    if (loadFlag)
+    {
+        LoadLevelConfig();
+        InitGame();
+        loadFlag = false;
+    }
 }
 
 void Game::InitGame()
@@ -63,7 +86,7 @@ void Game::InitGame()
     timeLastSpawn = 0;
     mysteryshipSpawnInterval = GetRandomValue(
         mysteryshipSpawnIntervalLowerBound, mysteryshipSpawnIntervalUpperBound);
-
+    
     run = true;
     score = 0;
     highScore = LoadHighScoreFromFile();
@@ -71,6 +94,7 @@ void Game::InitGame()
     rewardState = RewardState::NONE;
     lives = initLives;
 }
+
 
 Game::~Game()
 {
@@ -99,26 +123,23 @@ void Game::Update()
     else
     {
         optionList.Update();
-        // optionList.Draw();
-        if (ButtonHandler::IsMouseOverButton(&optionList.buttons[optionList.START]) &&
-            IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+        if (optionList.buttons[optionList.RESTART].IsPressed())
         {
             Reset();
-            InitGame();
+            loadFlag = true;
         }
 
-        else if (ButtonHandler::IsMouseOverButton(&optionList.buttons[optionList.EXIT]) &&
-                IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+        else if (optionList.buttons[optionList.EXIT].IsPressed())
         {
             curGameState = GameState::EXIT;
         }
         
-        else if (ButtonHandler::IsMouseOverButton(&optionList.buttons[optionList.MENU]) &&
-                IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+        else if (optionList.buttons[optionList.MENU].IsPressed())
         {
             curGameState = GameState::MENU;
             Reset();
-            InitGame();
+            // InitGame();
+            loadFlag = true;
         }
     }
     
@@ -425,9 +446,10 @@ void Game::DrawLayout()
 {
     DrawRectangleRoundedLines({10, 10, 780, 780}, 0.18f, 20, 2, YELLOW);
     DrawLineEx({25, 730}, {775, 730}, 3, YELLOW);
+    std::string levelText = "LEVEL 0" + std::to_string(mainMenu.level);
     
     if (run)
-        DrawTextEx(font, "LEVEL 01", {570, 740}, 34, 2, YELLOW);
+        DrawTextEx(font, levelText.c_str(), {570, 740}, 34, 2, YELLOW);
     else
     {
         if (aliens.size() == 0)
@@ -535,3 +557,4 @@ void Game::DisplayMysteryshipReward()
         }
     }
 }
+

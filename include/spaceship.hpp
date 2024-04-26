@@ -19,6 +19,7 @@ public:
     void Fire();
     Rectangle GetRect();
     void Reset();
+    void loadConfig();
 
     std::vector<Laser> lasers;
     Vector2 speed;
@@ -32,5 +33,4 @@ private:
     
     double lastFireTime;
     Sound laserSound;
-    
 };

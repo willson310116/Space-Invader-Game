@@ -9,6 +9,7 @@
 
 std::string FormatWithLeadingZeros(int number, int width);
 extern GameState curGameState;
+extern bool loadFlag;
 
 class Game
 {
@@ -19,6 +20,7 @@ public:
     void Draw();
     void Update();
     void HandleInput();
+    void SetGame();
 
     bool run;       // whether game is currently running
     int lives;      // player's live
@@ -27,6 +29,7 @@ public:
     int highScore;  // history high score
     Color backgroundColor = {29, 29, 29, 255};
     Music music;
+    Sound explosionSound;
     
     MainMenu mainMenu;
     OptionList optionList;
@@ -81,8 +84,9 @@ private:
     void CheckHighScore();
     void SaveHighScoreToFile(int score);
     int LoadHighScoreFromFile();
-    Sound explosionSound;
     void DrawLayout();
+    void LoadLevelConfig();
+    void Debugger(const char* text);
     
     // alien
     void AlienFire();

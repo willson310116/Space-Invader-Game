@@ -1,4 +1,5 @@
 #include "Alien.hpp"
+#include <iostream>
 
 Texture2D Alien::alienImages[3] = {};
 

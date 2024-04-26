@@ -21,11 +21,14 @@ void MysteryShip::Spawn()
     if (side == 0)
     {
         position.x = 25;
+        if (speed < 0)
+            speed *= -1;
     }
     else
     {
         position.x = GetScreenWidth() - image.width - 25;
-        speed *= -1;
+        if (speed > 0)
+            speed *= -1;
     }
     alive = true;
 }
