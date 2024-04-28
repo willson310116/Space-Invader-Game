@@ -4,10 +4,10 @@ SpaceShip::SpaceShip(YAML::Node& config) : config(config)
 {
     image = LoadTexture(config["Path"]["SpaceShipImg"].as<std::string>().c_str());
     laserSound = LoadSound(config["Path"]["LaserSound"].as<std::string>().c_str());
-    loadConfig();
+    LoadConfig();
 }
 
-void SpaceShip::loadConfig()
+void SpaceShip::LoadConfig()
 {
     position.x = (GetScreenWidth() - image.width) / 2;
     position.y = GetScreenHeight() - image.height - 100;
@@ -84,7 +84,7 @@ Rectangle SpaceShip::GetRect()
 
 void SpaceShip::Reset()
 {
-    loadConfig();
+    LoadConfig();
     lasers.clear();
 }
 

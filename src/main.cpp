@@ -1,9 +1,16 @@
 #include <iostream>
 #include <raylib.h>
+#include <unordered_map>
 #include "Game.hpp"
 
 GameState curGameState = GameState::MENU;
 bool loadFlag = false;
+std::unordered_map<std::string, Color> colorMap = {{"Red", RED},
+                                                   {"Orange", ORANGE},
+                                                   {"Blue", BLUE},
+                                                   {"Green", GREEN},
+                                                   };
+
 
 int main() {
     // Load the YAML file

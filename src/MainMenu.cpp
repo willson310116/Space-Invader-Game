@@ -1,29 +1,59 @@
-#include <string>
+#include <iostream>
 #include "MainMenu.hpp"
 
-MainMenu::MainMenu() : level(1)
+MainMenu::MainMenu(YAML::Node &config) : level(1), config(config)
 {
+    LoadConfig();
     Init();
+}
+
+void MainMenu::LoadConfig()
+{
+    YAML::Node node = config["Menu"]["MainMenu"];
+    buttonInitX = (GetScreenWidth() - node["ButtonXMargin"].as<int>()) / 2;
+    buttonInitY = (GetScreenHeight() - node["ButtonYMargin"].as<int>()) / 2;
+    buttonWidth = node["ButtonWidth"].as<int>();
+    buttonHeight = node["ButtonHeight"].as<int>();
+    buttonYGap = node["ButtonYGap"].as<int>();
+    if (node["ButtonTexts"].IsSequence())
+    {
+        for (auto text : node["ButtonTexts"])
+            buttonTexts.push_back(text.as<std::string>());
+    }
+    if (node["ButtonOnColor"].IsSequence())
+    {
+        for (auto text : node["ButtonOnColor"])
+            buttonOnColor.push_back(colorMap[text.as<std::string>()]);
+    }
+    if (node["ButtonOffColor"].IsSequence())
+    {
+        for (auto text : node["ButtonOffColor"])
+            buttonOffColor.push_back(colorMap[text.as<std::string>()]);
+    } 
 }
 
 void MainMenu::Init()
 {
     for (int i = 0; i < NUM_BUTTONS; i++)
         buttons.emplace_back();
-
-    ButtonHandler::InitButton(&buttons[START], (Rectangle){static_cast<float>((GetScreenWidth()-400)/2), 300, 400, 100}, ORANGE);
-    ButtonHandler::InitButton(&buttons[LEVEL], (Rectangle){static_cast<float>((GetScreenWidth()-400)/2)+100, 450, 200, 100}, ORANGE);
-    ButtonHandler::InitButton(&buttons[MINUS_LEVEL], (Rectangle){static_cast<float>((GetScreenWidth()-400)/2), 450, 100, 100}, RED);
-    ButtonHandler::InitButton(&buttons[PLUS_LEVEL], (Rectangle){static_cast<float>((GetScreenWidth()-400)/2)+300, 450, 100, 100}, GREEN);
-    ButtonHandler::InitButton(&buttons[EXIT], (Rectangle){static_cast<float>((GetScreenWidth()-400)/2), 600, 400, 100}, ORANGE);
+    
+    for (int i = 0; i < NUM_BUTTONS-2; i++)
+        ButtonHandler::InitButton(&buttons[i],
+                (Rectangle){buttonInitX, buttonInitY + i * (buttonHeight + buttonYGap),
+                    buttonWidth, buttonHeight}, buttonOffColor[i]);
+        
+    ButtonHandler::InitButton(&buttons[MINUS_LEVEL], (Rectangle){buttonInitX, 400, 100, 100}, buttonOffColor[MINUS_LEVEL]);
+    ButtonHandler::InitButton(&buttons[PLUS_LEVEL], (Rectangle){buttonInitX+300, 400, 100, 100}, buttonOffColor[PLUS_LEVEL]);
 }
 
 void MainMenu::Update()
 {   
-    ButtonHandler::HandleButton(&buttons[START], ORANGE, BLUE);
-    ButtonHandler::HandleButton(&buttons[PLUS_LEVEL], ORANGE, GREEN);
-    ButtonHandler::HandleButton(&buttons[MINUS_LEVEL], ORANGE, RED);
-    ButtonHandler::HandleButton(&buttons[EXIT], ORANGE, BLUE);
+    for (int i = 0; i < NUM_BUTTONS; i++)
+    {
+        if (i == LEVEL) continue;
+        ButtonHandler::HandleButton(&buttons[i], buttonOffColor[i], buttonOnColor[i]);
+    }
+        
 
     if (buttons[START].IsPressed())
     {
@@ -44,9 +74,13 @@ void MainMenu::Update()
 void MainMenu::Draw()
 {
     DrawText("Space Invader Game !", (GetScreenWidth()-MeasureText("Space Invader Game !", 60))/2, 100, 60, WHITE);
-    ButtonHandler::DrawButton(&buttons[START], "Start");
-    ButtonHandler::DrawButton(&buttons[LEVEL], std::to_string(level).c_str());
-    ButtonHandler::DrawButton(&buttons[PLUS_LEVEL], "+");
-    ButtonHandler::DrawButton(&buttons[MINUS_LEVEL], "-");
-    ButtonHandler::DrawButton(&buttons[EXIT], "Exit");
+    std::string levelText = "Level " + std::to_string(level);
+    for (int i = 0; i < NUM_BUTTONS; i++)
+    {
+        if (i == LEVEL)
+            ButtonHandler::DrawButton(&buttons[i], levelText);
+        else
+            ButtonHandler::DrawButton(&buttons[i], buttonTexts[i]);
+    }
 }
+

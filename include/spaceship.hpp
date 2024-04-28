@@ -19,7 +19,7 @@ public:
     void Fire();
     Rectangle GetRect();
     void Reset();
-    void loadConfig();
+    void LoadConfig();
 
     std::vector<Laser> lasers;
     Vector2 speed;

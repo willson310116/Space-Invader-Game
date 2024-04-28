@@ -57,7 +57,8 @@ void Game::Debugger(const char* text)
     std::cout << text << std::endl;
 }
 
-Game::Game(YAML::Node& config) : config(config), spaceship(config), mysteryship(config)
+Game::Game(YAML::Node& config) :
+    config(config), spaceship(config), mysteryship(config), optionList(config), mainMenu(config)
 {
     SetParams();
     music = LoadMusicStream(backgroundMusicPath.c_str());
@@ -119,13 +120,20 @@ void Game::Update()
         CheckCollisions();
         if (aliens.size() == 0) GameOver();
     }
-
     else
     {
         optionList.Update();
         if (optionList.buttons[optionList.RESTART].IsPressed())
         {
             Reset();
+            loadFlag = true;
+        }
+
+        else if (optionList.buttons[optionList.NEXT].IsPressed())
+        {
+            Reset();
+            if (mainMenu.level < 3)
+                mainMenu.level += 1;
             loadFlag = true;
         }
 

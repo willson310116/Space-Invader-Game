@@ -3,6 +3,40 @@ General:
   WindowHeight: 700
   WindowOffset: 50
 
+Path:
+  BackgroundMusic: ../asset/sounds/golden_wind.mp3
+  ExplosionSound: ../asset/sounds/explosion.ogg
+  LaserSound: ../asset/sounds/laser.ogg
+  Alien_1_Img: ../asset/graphics/alien_1.png
+  Alien_2_Img: ../asset/graphics/alien_2.png
+  Alien_3_Img: ../asset/graphics/alien_3.png
+  MysteryShipImg: ../asset/graphics/mystery.png
+  SpaceShipImg: ../asset/graphics/spaceship.png
+  Font: ../asset/font/monogram.ttf
+  HighScore: ./highscore.txt
+
+Menu:
+  MainMenu:
+    ButtonXMargin: 400
+    ButtonYMargin: 300
+    ButtonWidth: 400
+    ButtonHeight: 100
+    ButtonYGap: 50
+    ButtonTexts: ["Start", "Level ", "Exit", "+", "-"]
+    ButtonOnColor: ["Blue", "Blue", "Blue", "Green", "Red"]
+    ButtonOffColor: ["Orange", "Orange", "Orange", "Orange", "Orange"]
+  OptionList:
+    ButtonXMargin: 300
+    ButtonYMargin: 400
+    ButtonWidth: 300
+    ButtonHeight: 70
+    ButtonYGap: 30
+    ButtonTexts: ["ReStart", "Next", "Menu", "Exit"]
+    ButtonOnColor: ["Blue", "Blue", "Blue", "Blue"]
+    ButtonOffColor: ["Orange", "Orange", "Orange", "Orange"]
+
+
+
 Game:
   General:
     Lives: 3
@@ -64,17 +98,3 @@ Game:
     Laser:
       AlienLaserSpeed: 7
       
-
-Path:
-  BackgroundMusic: ../asset/sounds/golden_wind.mp3
-  ExplosionSound: ../asset/sounds/explosion.ogg
-  LaserSound: ../asset/sounds/laser.ogg
-  Alien_1_Img: ../asset/graphics/alien_1.png
-  Alien_2_Img: ../asset/graphics/alien_2.png
-  Alien_3_Img: ../asset/graphics/alien_3.png
-  MysteryShipImg: ../asset/graphics/mystery.png
-  SpaceShipImg: ../asset/graphics/spaceship.png
-  Font: ../asset/font/monogram.ttf
-  HighScore: ./highscore.txt
-
-
