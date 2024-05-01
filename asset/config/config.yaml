@@ -35,8 +35,6 @@ Menu:
     ButtonOnColor: ["Blue", "Blue", "Blue", "Blue"]
     ButtonOffColor: ["Orange", "Orange", "Orange", "Orange"]
 
-
-
 Game:
   General:
     Lives: 3
@@ -49,6 +47,14 @@ Game:
     Speed: 3
   Laser:
       SpaceshipLaserSpeed: -6
+  Reward:
+    Alien: [100, 200, 300]
+    MysteryShip:
+      AddScore: 500
+      AddMove: 2
+      AddLive: 1
+      ReduceFireIntervalFactor: 1.5
+      AddLaserSpeed: 2
   
   LEVEL1:
     Obstacle:

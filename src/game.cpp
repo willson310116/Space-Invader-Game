@@ -27,6 +27,21 @@ void Game::SetParams()
     musicVolume = node1["MusicVolume"].as<float>();
     initLives = node1["Lives"].as<int>();
     rewardDisplayInterval = node1["RewardDisplayInterval"].as<float>();
+    // Debugger("-----------------------------");
+    // reward
+    YAML::Node node2 = config["Game"]["Reward"];
+    if (node2["Alien"].IsSequence())
+    {
+        for (auto score : node2["Alien"])
+            alienReward.push_back(score.as<int>());
+    }
+    // Debugger("-----------------------------");
+    mysteryship.reward.addscore = node2["MysteryShip"]["AddScore"].as<int>();
+    mysteryship.reward.addMove = node2["MysteryShip"]["AddMove"].as<int>();
+    mysteryship.reward.addLive = node2["MysteryShip"]["AddLive"].as<int>();
+    mysteryship.reward.reduceFireInterval = node2["MysteryShip"]["ReduceFireIntervalFactor"].as<float>();
+    mysteryship.reward.addLaserSpeed = node2["MysteryShip"]["AddLaserSpeed"].as<int>();
+    // Debugger("-----------------------------");
 }
 
 void Game::LoadLevelConfig()
@@ -497,12 +512,8 @@ void Game::Reset()
 
 void Game::AddScore(std::vector<Alien>::iterator it)
 {
-    if (it->type == 1)
-        score += 100;
-    else if (it->type == 2)
-        score += 200;
-    else if (it->type == 3)
-        score += 300;
+    if (it->type > 0 && it->type <= alienReward.size())
+        score += alienReward[it->type];
 }
 
 void Game::GetMysteryshipReward()
@@ -512,23 +523,23 @@ void Game::GetMysteryshipReward()
     switch (rewardNum)
     {
     case 1:
-        score += 500;
+        score += mysteryship.reward.addscore;
         rewardState = RewardState::ADD_SCORE;
         break;
     case 2:
-        spaceship.speed.x += 2;
+        spaceship.speed.x += mysteryship.reward.addMove;
         rewardState = RewardState::ADD_MOVE;
         break;
     case 3:
-        lives += 1;
+        lives += mysteryship.reward.addLive;
         rewardState = RewardState::ADD_LIVE;
         break;
     case 4:
-        spaceship.fireInterval /= 2;
+        spaceship.fireInterval /= mysteryship.reward.addLaserSpeed;
         rewardState = RewardState::ADD_LASER;
         break;
     case 5:
-        spaceship.laserSpeed -= 2;
+        spaceship.laserSpeed -= mysteryship.reward.addLaserSpeed;
         rewardState = RewardState::ADD_LASER_SPEED;
         break;
     default:

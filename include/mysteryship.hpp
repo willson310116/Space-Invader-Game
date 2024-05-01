@@ -13,6 +13,16 @@ public:
     void Spawn();
     Rectangle GetRect();
     bool alive;
+public:
+    struct MysteryShipReward
+    {
+        int addscore;
+        int addMove;
+        int addLive;
+        float reduceFireInterval;
+        int addLaserSpeed;
+    };
+    MysteryShipReward reward;
     
 private:
     Vector2 position;

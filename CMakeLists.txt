@@ -14,7 +14,6 @@ FetchContent_Declare(
 set(BUILD_EXAMPLES OFF CACHE INTERNAL "")
 FetchContent_MakeAvailable(raylib)
 
-
 # yaml-cpp
 FetchContent_Declare(
   yaml-cpp

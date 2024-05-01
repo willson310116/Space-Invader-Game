@@ -38,7 +38,7 @@ public:
     Texture2D spaceshipImage;
 
 private:
-    // params
+    // general
     YAML::Node config;
     std::string backgroundMusicPath;
     std::string explosionSoundPath;
@@ -46,9 +46,12 @@ private:
     std::string spaceshipImgPath;
     std::string highScoreFile;
     float musicVolume;
-    int numObstacles;
     
+    // spaceship
     SpaceShip spaceship;
+    
+    // obstacle
+    int numObstacles;
     std::vector<Obstacle> obstacles;
     
     // aliens
@@ -73,6 +76,10 @@ private:
     float rewardDisplayInterval;
     RewardState rewardState;
 
+    // scoring
+    std::vector<int> alienReward;    
+    // MysteryShipReward mysteryShipReward;
+
 private:
     // general
     void InitGame();
@@ -92,12 +99,12 @@ private:
     void AlienFire();
     void MoveAliens();
     void MoveDownAliens(int distance);
+    std::vector<Alien> CreateAliens(int row, int col);
 
     // mysteryship
     void SpawnMystership();
     
-    // creating stuff
-    std::vector<Alien> CreateAliens(int row, int col);
+    // obstacle
     std::vector<Obstacle> CreateObstacles(int numObstacles);
     
     // scoring
