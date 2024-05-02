@@ -1,13 +1,14 @@
 #pragma once
 
-enum class GameState
+enum class GameState : int
 {
     MENU = 0,
     GAMEPLAY,
+    BOSS_STAGE,
     EXIT
 };
 
-enum class RewardState 
+enum class RewardState : int
 {
     NONE = 0,
     ADD_SCORE,

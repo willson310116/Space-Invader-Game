@@ -5,7 +5,7 @@
 class Alien
 {
 public:
-    Alien(YAML::Node& config, int type, Vector2 position);
+    Alien(YAML::Node& config, int type, Vector2 position, float scale);
     void Draw();
     void Update(int direction);
     int GetType();
@@ -16,6 +16,7 @@ public:
 
     Vector2 position;
     int type;
+    float scale;
 
 private:
 };

@@ -5,6 +5,7 @@
 
 GameState curGameState = GameState::MENU;
 bool loadFlag = false;
+bool loadBossFlag = false;
 std::unordered_map<std::string, Color> colorMap = {{"Red", RED},
                                                    {"Orange", ORANGE},
                                                    {"Blue", BLUE},

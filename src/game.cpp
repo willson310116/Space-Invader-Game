@@ -16,6 +16,7 @@ void Game::SetParams()
     // path
     YAML::Node node = config["Path"];
     backgroundMusicPath = node["BackgroundMusic"].as<std::string>();
+    bossMusicPath = node["BossMusic"].as<std::string>();
     explosionSoundPath = node["ExplosionSound"].as<std::string>();
     fontPath = node["Font"].as<std::string>();
     spaceshipImgPath = node["SpaceShipImg"].as<std::string>();
@@ -27,7 +28,7 @@ void Game::SetParams()
     musicVolume = node1["MusicVolume"].as<float>();
     initLives = node1["Lives"].as<int>();
     rewardDisplayInterval = node1["RewardDisplayInterval"].as<float>();
-    // Debugger("-----------------------------");
+    
     // reward
     YAML::Node node2 = config["Game"]["Reward"];
     if (node2["Alien"].IsSequence())
@@ -35,13 +36,11 @@ void Game::SetParams()
         for (auto score : node2["Alien"])
             alienReward.push_back(score.as<int>());
     }
-    // Debugger("-----------------------------");
     mysteryship.reward.addscore = node2["MysteryShip"]["AddScore"].as<int>();
     mysteryship.reward.addMove = node2["MysteryShip"]["AddMove"].as<int>();
     mysteryship.reward.addLive = node2["MysteryShip"]["AddLive"].as<int>();
     mysteryship.reward.reduceFireInterval = node2["MysteryShip"]["ReduceFireIntervalFactor"].as<float>();
     mysteryship.reward.addLaserSpeed = node2["MysteryShip"]["AddLaserSpeed"].as<int>();
-    // Debugger("-----------------------------");
 }
 
 void Game::LoadLevelConfig()
@@ -77,6 +76,7 @@ Game::Game(YAML::Node& config) :
 {
     SetParams();
     music = LoadMusicStream(backgroundMusicPath.c_str());
+    bossMusic = LoadMusicStream(bossMusicPath.c_str());
     explosionSound = LoadSound(explosionSoundPath.c_str());
     PlayMusicStream(music);
     SetMusicVolume(music, musicVolume);
@@ -92,7 +92,22 @@ void Game::SetGame()
         InitGame();
         loadFlag = false;
     }
+
+    if (loadBossFlag)
+    {
+        LoadBossConfig();
+        InitBossStage();
+        loadBossFlag = false;
+    }
 }
+
+void Game::InitBossStage()
+{
+    float x = 200, y = 200;
+    bosses.emplace_back(config, 4, Vector2{x, y}, 3.0);
+}
+
+void Game::LoadBossConfig(){}
 
 void Game::InitGame()
 {
@@ -111,7 +126,6 @@ void Game::InitGame()
     lives = initLives;
 }
 
-
 Game::~Game()
 {
     Alien::UnloadImages();   
@@ -124,17 +138,33 @@ void Game::Update()
     // dont run anything if gameover
     if (run)
     {
-        SpawnMystership();
         spaceship.Update();
-        mysteryship.Update();
         AlienFire();
-        for (auto& laser : alienLasers) laser.Update();
-        
         MoveAliens();
+        if (!bossStateStart)
+        {
+            SpawnMystership();
+            mysteryship.Update();
+            for (auto& laser : alienLasers) laser.Update();   
+            if (aliens.size() == 0)
+            {
+                bossStateStart = true;
+                loadBossFlag = true;
+                // GameOver();
+            }
+        }
+        else
+        {
+            if (bosses.size() == 0)
+            {
+                bossStateStart = false;
+                GameOver();
+            }
+        }
         DeleteInactiveLaser();
         CheckCollisions();
-        if (aliens.size() == 0) GameOver();
     }
+
     else
     {
         optionList.Update();
@@ -179,13 +209,22 @@ void Game::Draw()
         obstacle.Draw();
     for (auto& alien : aliens)
         alien.Draw();
-    for (auto& laser : alienLasers)
-        laser.Draw();
-    mysteryship.Draw();
+    for (auto& boss : bosses)
+        boss.Draw();
     
+    if (!bossStateStart && run)
+    {
+        for (auto& laser : alienLasers)
+            laser.Draw();
+        mysteryship.Draw();
+    }
+    else
+    {
+        DisplayBossLive();
+    }
+        
     if (!run)
         optionList.Draw();
-
 }
 
 void Game::HandleInput()
@@ -261,19 +300,18 @@ std::vector<Alien> Game::CreateAliens(int row, int col)
     int offsetY = 110;
     for (int i = 0; i < row; i++)
     {
-        for (int j = 0; j < col; j++)
-        {
-            int alienType;
+        int alienType;
             if (i == 0)
                 alienType = 3;
             else if (i == 1 || i == 2)
                 alienType = 2;
             else
                 alienType = 1;
-
+        for (int j = 0; j < col; j++)
+        {
             float x = offsetX + j * gapBetweenAliens;
             float y = offsetY + i * gapBetweenAliens;
-            aliens.emplace_back(config, alienType, Vector2{x, y});
+            aliens.emplace_back(config, alienType, Vector2{x, y}, 1.0);
         }
     }
     return aliens;
@@ -298,6 +336,25 @@ void Game::MoveAliens()
         }
             
         alien.Update(alienSpeed);
+    }
+
+    for (auto& boss : bosses)
+    {
+        if (boss.position.x + boss.alienImages[boss.type - 1].width * boss.scale  > GetScreenWidth() - 25)
+        {
+            if (alienSpeed > 0)
+                alienSpeed *= -1;
+            MoveDownAliens(alienDropDistance);
+        }
+            
+        else if (boss.position.x < 25)
+        {
+            if (alienSpeed < 0)
+                alienSpeed *= -1;
+            MoveDownAliens(alienDropDistance);
+        }
+            
+        boss.Update(alienSpeed);
     }
 }
 
@@ -324,6 +381,7 @@ void Game::SpawnMystership()
 void Game::AlienFire()
 {
     double curTime = GetTime();
+    // normal alien
     if (curTime - timeLastAlienFired >= alienFireInterval && !aliens.empty())
     {
         int randomIndex = GetRandomValue(0, aliens.size() - 1);
@@ -335,6 +393,7 @@ void Game::AlienFire()
         
         timeLastAlienFired = GetTime();
     }
+    // boss alien
 }
 
 void Game::CheckCollisions()
@@ -352,6 +411,25 @@ void Game::CheckCollisions()
                 CheckHighScore();
                 it = aliens.erase(it);
                 laser.active = false;
+            }
+            else
+                it += 1;   
+        }
+
+        it = bosses.begin();
+        while (it != bosses.end())
+        {
+            if (CheckCollisionRecs(it->GetRect(), laser.GetRect()))
+            {
+                PlaySound(explosionSound);
+                AddScore(it);
+                CheckHighScore();
+                laser.active = false;
+                bossLive -= 1;
+                if (bossLive <= 0)
+                    it = bosses.erase(it);
+                else
+                    it += 1;
             }
             else
                 it += 1;   
@@ -497,6 +575,13 @@ void Game::DrawLayout()
     DrawTextEx(font, highScoreText.c_str(), {665, 40}, 36, 2, YELLOW);
 }
 
+void Game::DisplayBossLive()
+{
+    DrawRectangleRoundedLines({50, 120, float(GetScreenWidth()-100), 7}, 0.18f, 20, 2, WHITE);
+    DrawRectangleRec({50, 120,
+        float((GetScreenWidth()-100) * bossLive / 3), 7}, RED);
+}
+
 void Game::GameOver()
 {
     run = false;
@@ -513,7 +598,7 @@ void Game::Reset()
 void Game::AddScore(std::vector<Alien>::iterator it)
 {
     if (it->type > 0 && it->type <= alienReward.size())
-        score += alienReward[it->type];
+        score += alienReward[it->type-1];
 }
 
 void Game::GetMysteryshipReward()
@@ -524,27 +609,21 @@ void Game::GetMysteryshipReward()
     {
     case 1:
         score += mysteryship.reward.addscore;
-        rewardState = RewardState::ADD_SCORE;
         break;
     case 2:
         spaceship.speed.x += mysteryship.reward.addMove;
-        rewardState = RewardState::ADD_MOVE;
         break;
     case 3:
         lives += mysteryship.reward.addLive;
-        rewardState = RewardState::ADD_LIVE;
         break;
     case 4:
         spaceship.fireInterval /= mysteryship.reward.addLaserSpeed;
-        rewardState = RewardState::ADD_LASER;
         break;
     case 5:
         spaceship.laserSpeed -= mysteryship.reward.addLaserSpeed;
-        rewardState = RewardState::ADD_LASER_SPEED;
-        break;
-    default:
         break;
     }
+    rewardState = static_cast<RewardState>(rewardNum);
 }
 
 void Game::DisplayMysteryshipReward()

@@ -5,11 +5,13 @@ General:
 
 Path:
   BackgroundMusic: ../asset/sounds/golden_wind.mp3
+  BossMusic: ../asset/sounds/golden_wind.mp3
   ExplosionSound: ../asset/sounds/explosion.ogg
   LaserSound: ../asset/sounds/laser.ogg
   Alien_1_Img: ../asset/graphics/alien_1.png
   Alien_2_Img: ../asset/graphics/alien_2.png
   Alien_3_Img: ../asset/graphics/alien_3.png
+  Alien_4_Img: ../asset/graphics/alien_4.png
   MysteryShipImg: ../asset/graphics/mystery.png
   SpaceShipImg: ../asset/graphics/spaceship.png
   Font: ../asset/font/monogram.ttf
@@ -60,8 +62,8 @@ Game:
     Obstacle:
       NumObstacles: 5
     Alien:
-      AlienRows: 3
-      AlienCols: 5
+      AlienRows: 1
+      AlienCols: 1
       AlienSpeed: 1
       AlienDropDistance: 6
       FireInterval: 0.5
@@ -76,8 +78,8 @@ Game:
     Obstacle:
       NumObstacles: 4
     Alien:
-      AlienRows: 4
-      AlienCols: 10
+      AlienRows: 1
+      AlienCols: 1
       AlienSpeed: 2
       AlienDropDistance: 6
       FireInterval: 0.4

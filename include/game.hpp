@@ -10,6 +10,7 @@
 std::string FormatWithLeadingZeros(int number, int width);
 extern GameState curGameState;
 extern bool loadFlag;
+extern bool loadBossFlag;
 
 class Game
 {
@@ -29,6 +30,7 @@ public:
     int highScore;  // history high score
     Color backgroundColor = {29, 29, 29, 255};
     Music music;
+    Music bossMusic;
     Sound explosionSound;
     
     MainMenu mainMenu;
@@ -41,6 +43,7 @@ private:
     // general
     YAML::Node config;
     std::string backgroundMusicPath;
+    std::string bossMusicPath;
     std::string explosionSoundPath;
     std::string fontPath;
     std::string spaceshipImgPath;
@@ -64,6 +67,11 @@ private:
     std::vector<Laser> alienLasers;
     float timeLastAlienFired;
     float alienFireInterval;
+
+    // boss
+    std::vector<Alien> bosses;
+    int bossLive = 3;
+    bool bossStateStart = false;
     
     // mysteryship
     MysteryShip mysteryship;
@@ -77,8 +85,7 @@ private:
     RewardState rewardState;
 
     // scoring
-    std::vector<int> alienReward;    
-    // MysteryShipReward mysteryShipReward;
+    std::vector<int> alienReward;
 
 private:
     // general
@@ -94,12 +101,19 @@ private:
     void DrawLayout();
     void LoadLevelConfig();
     void Debugger(const char* text);
+
+    
     
     // alien
     void AlienFire();
     void MoveAliens();
     void MoveDownAliens(int distance);
     std::vector<Alien> CreateAliens(int row, int col);
+
+    // boss
+    void InitBossStage();
+    void LoadBossConfig();
+    void DisplayBossLive();
 
     // mysteryship
     void SpawnMystership();
