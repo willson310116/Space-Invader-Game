@@ -12,7 +12,6 @@ std::unordered_map<std::string, Color> colorMap = {{"Red", RED},
                                                    {"Green", GREEN},
                                                    };
 
-
 int main() {
     // Load the YAML file
     YAML::Node config = YAML::LoadFile("../asset/config/config.yaml");

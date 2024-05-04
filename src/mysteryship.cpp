@@ -1,10 +1,9 @@
 #include "MysteryShip.hpp"
 #include <iostream>
 
-MysteryShip::MysteryShip(YAML::Node& config)
+MysteryShip::MysteryShip(YAML::Node& config) : alive(false)
 {
     image = LoadTexture(config["Path"]["MysteryShipImg"].as<std::string>().c_str());
-    alive = false;
     speed = config["Game"]["MysteryShip"]["Speed"].as<int>();
 }
 

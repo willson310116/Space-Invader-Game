@@ -45,10 +45,9 @@ Game:
   SpaceShip:
     Speed: 6
     FireInterval: 0.5
+    LaserSpeed: -6
   MysteryShip:
     Speed: 3
-  Laser:
-      SpaceshipLaserSpeed: -6
   Reward:
     Alien: [100, 200, 300]
     MysteryShip:
@@ -62,47 +61,60 @@ Game:
     Obstacle:
       NumObstacles: 5
     Alien:
-      AlienRows: 1
-      AlienCols: 1
-      AlienSpeed: 1
-      AlienDropDistance: 6
+      Rows: 1
+      Cols: 1
+      Speed: 1
+      DropDistance: 6
       FireInterval: 0.5
+      LaserSpeed: 6
     MysteryShip:
-      MysteryshipSpawnIntervalLowerBound: 5
-      MysteryshipSpawnIntervalUpperBound: 10
+      SpawnIntervalLowerBound: 5
+      SpawnIntervalUpperBound: 10
+    Boss:
+      Live: 5
       Speed: 3
-    Laser:
-      AlienLaserSpeed: 6
+      Scale: 3
+      FireInterval: 0.4
+      LaserSpeed: 6
   
   LEVEL2:
     Obstacle:
       NumObstacles: 4
     Alien:
-      AlienRows: 1
-      AlienCols: 1
-      AlienSpeed: 2
-      AlienDropDistance: 6
+      Rows: 1
+      Cols: 1
+      Speed: 2
+      DropDistance: 6
       FireInterval: 0.4
+      LaserSpeed: 6
     MysteryShip:
-      MysteryshipSpawnIntervalLowerBound: 5
-      MysteryshipSpawnIntervalUpperBound: 10
+      SpawnIntervalLowerBound: 5
+      SpawnIntervalUpperBound: 10
+    Boss:
+      Live: 10
       Speed: 3
-    Laser:
-      AlienLaserSpeed: 6
+      Scale: 4
+      FireInterval: 0.3
+      LaserSpeed: 6
   
   LEVEL3:
     Obstacle:
       NumObstacles: 3
     Alien:
-      AlienRows: 6
-      AlienCols: 10
-      AlienSpeed: 2
-      AlienDropDistance: 8
+      Rows: 6
+      Cols: 10
+      Speed: 2
+      DropDistance: 8
       FireInterval: 0.4
+      LaserSpeed: 7
     MysteryShip:
-      MysteryshipSpawnIntervalLowerBound: 5
-      MysteryshipSpawnIntervalUpperBound: 10
+      SpawnIntervalLowerBound: 5
+      SpawnIntervalUpperBound: 10
+    Boss:
+      Live: 15
       Speed: 3
-    Laser:
-      AlienLaserSpeed: 7
+      Scale: 5
+      FireInterval: 0.3
+      LaserSpeed: 7
+
       

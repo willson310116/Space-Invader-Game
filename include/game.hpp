@@ -69,9 +69,16 @@ private:
     float alienFireInterval;
 
     // boss
-    std::vector<Alien> bosses;
-    int bossLive = 3;
+    int bossLive;
+    int bossSpeed;
+    float bossScale;
+    int initBossLives;
     bool bossStateStart = false;
+    std::vector<Alien> bosses;
+    std::vector<Laser> bossLasers;
+    int bossLaserSpeed;
+    float timeLastBossFired;
+    float bossFireInterval;
     
     // mysteryship
     MysteryShip mysteryship;
@@ -107,7 +114,8 @@ private:
     // alien
     void AlienFire();
     void MoveAliens();
-    void MoveDownAliens(int distance);
+    void MoveDownAliens(std::vector<Alien>& aliens_);
+    void MoveAliensHelper(std::vector<Alien>& aliens_);
     std::vector<Alien> CreateAliens(int row, int col);
 
     // boss

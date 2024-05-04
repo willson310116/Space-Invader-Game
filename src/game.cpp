@@ -52,18 +52,23 @@ void Game::LoadLevelConfig()
     numObstacles = node["Obstacle"]["NumObstacles"].as<int>();
 
     // alien
-    alienRows = node["Alien"]["AlienRows"].as<int>();
-    alienCols = node["Alien"]["AlienCols"].as<int>();
-    alienSpeed = node["Alien"]["AlienSpeed"].as<int>();
-    alienDropDistance = node["Alien"]["AlienDropDistance"].as<int>();
+    alienRows = node["Alien"]["Rows"].as<int>();
+    alienCols = node["Alien"]["Cols"].as<int>();
+    alienSpeed = node["Alien"]["Speed"].as<int>();
+    alienDropDistance = node["Alien"]["DropDistance"].as<int>();
     alienFireInterval = node["Alien"]["FireInterval"].as<float>();
+    alienLaserSpeed = node["Alien"]["LaserSpeed"].as<int>();
     
     // mysteryship
-    mysteryshipSpawnIntervalLowerBound = node["MysteryShip"]["MysteryshipSpawnIntervalLowerBound"].as<int>();
-    mysteryshipSpawnIntervalUpperBound = node["MysteryShip"]["MysteryshipSpawnIntervalUpperBound"].as<int>();
+    mysteryshipSpawnIntervalLowerBound = node["MysteryShip"]["SpawnIntervalLowerBound"].as<int>();
+    mysteryshipSpawnIntervalUpperBound = node["MysteryShip"]["SpawnIntervalUpperBound"].as<int>();
   
-    // alien
-    alienLaserSpeed = node["Laser"]["AlienLaserSpeed"].as<int>();
+    // boss
+    initBossLives = node["Boss"]["Live"].as<int>();
+    bossSpeed = node["Boss"]["Speed"].as<int>();
+    bossScale = node["Boss"]["Scale"].as<float>();
+    bossFireInterval = node["Boss"]["FireInterval"].as<float>();
+    bossLaserSpeed = node["Boss"]["LaserSpeed"].as<int>();
 }
 
 void Game::Debugger(const char* text)
@@ -95,8 +100,9 @@ void Game::SetGame()
 
     if (loadBossFlag)
     {
-        LoadBossConfig();
+        // LoadBossConfig();
         InitBossStage();
+        mysteryship.alive = false;
         loadBossFlag = false;
     }
 }
@@ -104,10 +110,10 @@ void Game::SetGame()
 void Game::InitBossStage()
 {
     float x = 200, y = 200;
-    bosses.emplace_back(config, 4, Vector2{x, y}, 3.0);
+    bosses.emplace_back(config, 4, Vector2{x, y}, bossScale);
+    bossLive = initBossLives;
+    timeLastAlienFired = 0;
 }
-
-void Game::LoadBossConfig(){}
 
 void Game::InitGame()
 {
@@ -150,11 +156,11 @@ void Game::Update()
             {
                 bossStateStart = true;
                 loadBossFlag = true;
-                // GameOver();
             }
         }
         else
         {
+            for (auto& laser : bossLasers) laser.Update();   
             if (bosses.size() == 0)
             {
                 bossStateStart = false;
@@ -203,17 +209,13 @@ void Game::Draw()
     DrawLayout();
     DisplayMysteryshipReward();
     spaceship.Draw();
-    for (auto& laser : spaceship.lasers)
-        laser.Draw();
-    for (auto& obstacle : obstacles)
-        obstacle.Draw();
-    for (auto& alien : aliens)
-        alien.Draw();
-    for (auto& boss : bosses)
-        boss.Draw();
+    for (auto& laser : spaceship.lasers) laser.Draw();
+    for (auto& obstacle : obstacles) obstacle.Draw();
+    
     
     if (!bossStateStart && run)
     {
+        for (auto& alien : aliens) alien.Draw();
         for (auto& laser : alienLasers)
             laser.Draw();
         mysteryship.Draw();
@@ -221,6 +223,9 @@ void Game::Draw()
     else
     {
         DisplayBossLive();
+        for (auto& boss : bosses) boss.Draw();
+        for (auto& laser : bossLasers)
+            laser.Draw();
     }
         
     if (!run)
@@ -253,15 +258,29 @@ void Game::DeleteInactiveLaser()
         spaceship.lasers.end()
     ); 
 
-    alienLasers.erase(
-        std::remove_if(
-            alienLasers.begin(), 
-            alienLasers.end(),
-            [](Laser const & laser) { return !laser.active; }
-        ), 
-        alienLasers.end()
-    ); 
-
+    if (!bossStateStart)
+    {
+        alienLasers.erase(
+            std::remove_if(
+                alienLasers.begin(), 
+                alienLasers.end(),
+                [](Laser const & laser) { return !laser.active; }
+            ), 
+            alienLasers.end()
+        );
+    }
+    else
+    {
+        bossLasers.erase(
+            std::remove_if(
+                bossLasers.begin(), 
+                bossLasers.end(),
+                [](Laser const & laser) { return !laser.active; }
+            ), 
+            bossLasers.end()
+        );
+    }
+    
     // [warning] good, but avoid using raw for-loop
     // for (auto it = spaceship.lasers.begin(); it != spaceship.lasers.end();)
     // {
@@ -311,59 +330,44 @@ std::vector<Alien> Game::CreateAliens(int row, int col)
         {
             float x = offsetX + j * gapBetweenAliens;
             float y = offsetY + i * gapBetweenAliens;
-            aliens.emplace_back(config, alienType, Vector2{x, y}, 1.0);
+            aliens.emplace_back(config, alienType, Vector2{x, y});
         }
     }
     return aliens;
 }
 
-void Game::MoveAliens()
+void Game::MoveAliensHelper(std::vector<Alien>& aliens_)
 {
-    for (auto& alien : aliens)
+    for (auto& alien : aliens_)
     {
-        if (alien.position.x + alien.alienImages[alien.type - 1].width > GetScreenWidth() - 25)
+        if (alien.position.x + alien.alienImages[alien.type - 1].width * alien.scale > GetScreenWidth() - 25)
         {
             if (alienSpeed > 0)
                 alienSpeed *= -1;
-            MoveDownAliens(alienDropDistance);
+            MoveDownAliens(aliens_);
         }
             
         else if (alien.position.x < 25)
         {
             if (alienSpeed < 0)
                 alienSpeed *= -1;
-            MoveDownAliens(alienDropDistance);
+            MoveDownAliens(aliens_);
         }
             
         alien.Update(alienSpeed);
     }
-
-    for (auto& boss : bosses)
-    {
-        if (boss.position.x + boss.alienImages[boss.type - 1].width * boss.scale  > GetScreenWidth() - 25)
-        {
-            if (alienSpeed > 0)
-                alienSpeed *= -1;
-            MoveDownAliens(alienDropDistance);
-        }
-            
-        else if (boss.position.x < 25)
-        {
-            if (alienSpeed < 0)
-                alienSpeed *= -1;
-            MoveDownAliens(alienDropDistance);
-        }
-            
-        boss.Update(alienSpeed);
-    }
 }
 
-void Game::MoveDownAliens(int distance)
+void Game::MoveAliens()
 {
-    for (auto& alien : aliens)
-    {
-        alien.position.y += distance;
-    }
+    MoveAliensHelper(aliens);
+    MoveAliensHelper(bosses);
+}
+
+void Game::MoveDownAliens(std::vector<Alien>& aliens_)
+{
+    for (auto& alien : aliens_)
+        alien.position.y += alienDropDistance;
 }
 
 void Game::SpawnMystership()
@@ -381,19 +385,36 @@ void Game::SpawnMystership()
 void Game::AlienFire()
 {
     double curTime = GetTime();
-    // normal alien
-    if (curTime - timeLastAlienFired >= alienFireInterval && !aliens.empty())
+    if (!bossStateStart)
     {
-        int randomIndex = GetRandomValue(0, aliens.size() - 1);
-        Alien& alien = aliens[randomIndex];
-        
-        alienLasers.emplace_back(
-            Vector2{alien.position.x + alien.alienImages[alien.type - 1].width / 2,
-                alien.position.y + alien.alienImages[alien.type - 1].height}, alienLaserSpeed, 2);
-        
-        timeLastAlienFired = GetTime();
+        // normal alien
+        if (curTime - timeLastAlienFired >= alienFireInterval && !aliens.empty())
+        {
+            int randomIndex = GetRandomValue(0, aliens.size() - 1);
+            Alien& alien = aliens[randomIndex];
+            
+            alienLasers.emplace_back(
+                Vector2{alien.position.x + alien.alienImages[alien.type - 1].width / 2,
+                    alien.position.y + alien.alienImages[alien.type - 1].height}, alienLaserSpeed, 2);
+            
+            timeLastAlienFired = GetTime();
+        }
     }
-    // boss alien
+    else
+    {
+        // boss alien
+        if (curTime - timeLastBossFired >= bossFireInterval && !bosses.empty())
+        {
+            int randomIndex = GetRandomValue(0, bosses.size() - 1);
+            Alien& boss = bosses[randomIndex];
+            
+            bossLasers.emplace_back(
+                Vector2{boss.position.x + boss.alienImages[boss.type - 1].width / 2 * boss.scale,
+                    boss.position.y + boss.alienImages[boss.type - 1].height * boss.scale}, bossLaserSpeed, 3);
+            
+            timeLastBossFired = GetTime();
+        }
+    }
 }
 
 void Game::CheckCollisions()
@@ -487,6 +508,18 @@ void Game::CheckCollisions()
         }
     }
 
+    // boss lasers
+    for (auto& laser : bossLasers)
+    {
+        if (CheckCollisionRecs(laser.GetRect(), spaceship.GetRect()))
+        {
+            laser.active = false;
+            lives -= 1;
+            if (lives == 0)
+                GameOver();
+        }
+    }
+
     // alien collide with obstacle
     for (auto& alien : aliens)
     {
@@ -504,9 +537,9 @@ void Game::CheckCollisions()
         if (CheckCollisionRecs(alien.GetRect(), spaceship.GetRect()))
         {
             GameOver();
-        }
-            
+        } 
     }
+    
 }
 
 void Game::CheckHighScore()
@@ -579,7 +612,7 @@ void Game::DisplayBossLive()
 {
     DrawRectangleRoundedLines({50, 120, float(GetScreenWidth()-100), 7}, 0.18f, 20, 2, WHITE);
     DrawRectangleRec({50, 120,
-        float((GetScreenWidth()-100) * bossLive / 3), 7}, RED);
+        float((GetScreenWidth()-100) * bossLive / initBossLives), 7}, RED);
 }
 
 void Game::GameOver()

@@ -15,9 +15,8 @@ void SpaceShip::LoadConfig()
     speed.y = 5;
     fireInterval = config["Game"]["SpaceShip"]["FireInterval"].as<float>();
     lastFireTime = 0.0;
-    laserSpeed = config["Game"]["Laser"]["SpaceshipLaserSpeed"].as<int>();;
+    laserSpeed = config["Game"]["SpaceShip"]["LaserSpeed"].as<int>();;
 }
-
 
 SpaceShip::~SpaceShip()
 {
