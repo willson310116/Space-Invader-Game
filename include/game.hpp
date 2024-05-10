@@ -6,6 +6,7 @@
 #include "SpaceShip.hpp"
 #include "OptionList.hpp"
 #include "MysteryShip.hpp"
+#include "BossMenu.hpp"
 
 std::string FormatWithLeadingZeros(int number, int width);
 extern GameState curGameState;
@@ -35,6 +36,8 @@ public:
     
     MainMenu mainMenu;
     OptionList optionList;
+    BossMenu bossMenu;
+    Sound bossWarningSound;
     
     Font font;
     Texture2D spaceshipImage;
@@ -45,6 +48,7 @@ private:
     std::string backgroundMusicPath;
     std::string bossMusicPath;
     std::string explosionSoundPath;
+    std::string bossWarningSoundPath;
     std::string fontPath;
     std::string spaceshipImgPath;
     std::string highScoreFile;
@@ -74,11 +78,14 @@ private:
     float bossScale;
     int initBossLives;
     bool bossStateStart = false;
+    bool displayBossMenuFlag = false;
     std::vector<Alien> bosses;
     std::vector<Laser> bossLasers;
     int bossLaserSpeed;
     float timeLastBossFired;
     float bossFireInterval;
+    float timeLastDisplayBossMenu;
+    float bossMenuDisplayInterval;
     
     // mysteryship
     MysteryShip mysteryship;
@@ -122,6 +129,7 @@ private:
     void InitBossStage();
     void LoadBossConfig();
     void DisplayBossLive();
+    void StartBossState();
 
     // mysteryship
     void SpawnMystership();

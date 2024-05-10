@@ -29,6 +29,6 @@ void ButtonHandler::DrawButton(Button *button, const char *text)
 void ButtonHandler::DrawButton(Button *button, std::string text)
 {
     DrawRectangleRec(button->rect, button->color);
-    DrawText(text.c_str(), button->rect.x+button->rect.width/2-MeasureText(text.c_str(), 40)/2,
-            button->rect.y+button->rect.height/2-40/2, 40, WHITE);
+    DrawText(text.c_str(), button->rect.x+button->rect.width/2-MeasureText(text.c_str(), 45)/2,
+            button->rect.y+button->rect.height/2-40/2, 45, WHITE);
 }

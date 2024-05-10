@@ -40,6 +40,7 @@ set(SOURCE_FILE src/main.cpp
                 src/MysteryShip.cpp
                 src/MainMenu.cpp
                 src/OptionList.cpp
+                src/BossMenu.cpp
                 src/ButtonHandler.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILE})

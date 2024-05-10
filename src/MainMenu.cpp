@@ -54,7 +54,6 @@ void MainMenu::Update()
         ButtonHandler::HandleButton(&buttons[i], buttonOffColor[i], buttonOnColor[i]);
     }
         
-
     if (buttons[START].IsPressed())
     {
         curGameState = GameState::GAMEPLAY;

@@ -5,8 +5,9 @@ General:
 
 Path:
   BackgroundMusic: ../asset/sounds/golden_wind.mp3
-  BossMusic: ../asset/sounds/golden_wind.mp3
+  BossMusic: ../asset/sounds/golden_wind_boss.mp3
   ExplosionSound: ../asset/sounds/explosion.ogg
+  BossWarningSound: ../asset/sounds/warning.mp3
   LaserSound: ../asset/sounds/laser.ogg
   Alien_1_Img: ../asset/graphics/alien_1.png
   Alien_2_Img: ../asset/graphics/alien_2.png
@@ -36,11 +37,19 @@ Menu:
     ButtonTexts: ["ReStart", "Next", "Menu", "Exit"]
     ButtonOnColor: ["Blue", "Blue", "Blue", "Blue"]
     ButtonOffColor: ["Orange", "Orange", "Orange", "Orange"]
+  BossMenu:
+    ButtonXMargin: 100
+    ButtonYMargin: 300
+    ButtonWidth: 600
+    ButtonHeight: 150
+    ButtonTexts: ["Warning"]
+    ButtonOnColor: ["Red"]
 
 Game:
   General:
     Lives: 3
     RewardDisplayInterval: 2
+    BossMenuDisplayInterval: 5
     MusicVolume: 0.25
   SpaceShip:
     Speed: 6
@@ -81,8 +90,8 @@ Game:
     Obstacle:
       NumObstacles: 4
     Alien:
-      Rows: 1
-      Cols: 1
+      Rows: 2
+      Cols: 2
       Speed: 2
       DropDistance: 6
       FireInterval: 0.4
