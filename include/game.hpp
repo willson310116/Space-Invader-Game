@@ -30,14 +30,15 @@ public:
     int score;      // player's score
     int highScore;  // history high score
     Color backgroundColor = {29, 29, 29, 255};
-    Music music;
+    Music* music;   // current playing music
+    Music backgroundMusic;
     Music bossMusic;
     Sound explosionSound;
     
     MainMenu mainMenu;
     OptionList optionList;
-    BossMenu bossMenu;
-    Sound bossWarningSound;
+    BossMenu bossMenu;      // stage transition
+    Sound bossWarningSound; // stage transition sound
     
     Font font;
     Texture2D spaceshipImage;
@@ -116,8 +117,6 @@ private:
     void LoadLevelConfig();
     void Debugger(const char* text);
 
-    
-    
     // alien
     void AlienFire();
     void MoveAliens();

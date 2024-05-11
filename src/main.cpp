@@ -38,8 +38,8 @@ int main() {
             break;
 
         case GameState::GAMEPLAY:
-            UpdateMusicStream(game.music);
             game.SetGame();
+            UpdateMusicStream(*game.music);
             game.HandleInput();
             game.Update();
             game.Draw();

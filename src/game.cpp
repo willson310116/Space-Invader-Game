@@ -82,12 +82,10 @@ Game::Game(YAML::Node& config) :
     config(config), spaceship(config), mysteryship(config), optionList(config), mainMenu(config), bossMenu(config)
 {
     SetParams();
-    music = LoadMusicStream(backgroundMusicPath.c_str());
+    backgroundMusic = LoadMusicStream(backgroundMusicPath.c_str());
     bossMusic = LoadMusicStream(bossMusicPath.c_str());
     explosionSound = LoadSound(explosionSoundPath.c_str());
     bossWarningSound = LoadSound(bossWarningSoundPath.c_str());
-    PlayMusicStream(music);
-    SetMusicVolume(music, musicVolume);
     font = LoadFontEx(fontPath.c_str(), 64, 0, 0);
     spaceshipImage = LoadTexture(spaceshipImgPath.c_str());
 }
@@ -115,7 +113,6 @@ void Game::InitBossStage()
     bosses.emplace_back(config, 4, Vector2{x, y}, bossScale);
     bossLive = initBossLives;
     timeLastBossFired = 0;
-    // timeLastDisplayBossMenu = GetTime();
 }
 
 void Game::InitGame()
@@ -133,20 +130,24 @@ void Game::InitGame()
     timeLastDisplayReward = 0;
     rewardState = RewardState::NONE;
     lives = initLives;
+    music = &backgroundMusic;
+    PlayMusicStream(*music);
+    SetMusicVolume(*music, musicVolume);
 }
 
 Game::~Game()
 {
     Alien::UnloadImages();   
-    UnloadMusicStream(music);
+    UnloadMusicStream(backgroundMusic);
+    UnloadMusicStream(bossMusic);
     UnloadSound(explosionSound);
+    UnloadSound(bossWarningSound);
 }
 
 void Game::Update()
 {   
     if (bossMenu.active)
     {
-        // Debugger("bossMenu is active");
         double curTime = GetTime();
         if (curTime - timeLastDisplayBossMenu <= bossMenuDisplayInterval)
         {
@@ -156,10 +157,9 @@ void Game::Update()
         {
             bossMenu.active = false;
             displayBossMenuFlag = false;
-            music = bossMusic;
-            PlayMusicStream(music);
+            music = &bossMusic;
+            PlayMusicStream(*music);
         }
-        
     }
     // dont run anything if gameover
     else if (run)
@@ -176,7 +176,7 @@ void Game::Update()
             {
                 StartBossState();
                 PlaySound(bossWarningSound);
-                StopMusicStream(music);
+                StopMusicStream(*music);
             }
         }
         else

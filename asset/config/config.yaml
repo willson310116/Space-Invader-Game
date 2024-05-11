@@ -58,7 +58,8 @@ Game:
   MysteryShip:
     Speed: 3
   Reward:
-    Alien: [100, 200, 300]
+    # alien type [1,2,3,4]
+    Alien: [100, 200, 300, 100]
     MysteryShip:
       AddScore: 500
       AddMove: 2
@@ -80,7 +81,7 @@ Game:
       SpawnIntervalLowerBound: 5
       SpawnIntervalUpperBound: 10
     Boss:
-      Live: 5
+      Live: 3
       Speed: 3
       Scale: 3
       FireInterval: 0.4
@@ -90,8 +91,8 @@ Game:
     Obstacle:
       NumObstacles: 4
     Alien:
-      Rows: 2
-      Cols: 2
+      Rows: 4
+      Cols: 6
       Speed: 2
       DropDistance: 6
       FireInterval: 0.4
@@ -100,8 +101,8 @@ Game:
       SpawnIntervalLowerBound: 5
       SpawnIntervalUpperBound: 10
     Boss:
-      Live: 10
-      Speed: 3
+      Live: 20
+      Speed: 4
       Scale: 4
       FireInterval: 0.3
       LaserSpeed: 6
@@ -120,8 +121,8 @@ Game:
       SpawnIntervalLowerBound: 5
       SpawnIntervalUpperBound: 10
     Boss:
-      Live: 15
-      Speed: 3
+      Live: 20
+      Speed: 5
       Scale: 5
       FireInterval: 0.3
       LaserSpeed: 7
